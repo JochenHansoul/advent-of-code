@@ -58,6 +58,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class BinaryBoarding {
@@ -67,43 +68,27 @@ public class BinaryBoarding {
         final int ROWS = 128;
         final int COLUMNS = 8;
         final char UPPER_ROW_SYMBOL = 'B';
-        final char LOWER_ROW_SYMBOL = 'R';
+        final char LOWER_ROW_SYMBOL = 'F';
+        final char UPPER_COLUMN_SYMBOL = 'R';
+        final char LOWER_COLUMN_SYMBOL = 'L';
+
         final int ROWS_LOG2 = (int) (Math.log(ROWS) / Math.log(2));
         final int COLUMNS_LOG2 = (int) (Math.log(COLUMNS) / Math.log(2));
 
-        ArrayList<char[]> boardingPasses = new ArrayList<>();
-
+        ArrayList<Integer> ids = new ArrayList<>();
         // read file
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
-                boardingPasses.add(line.toCharArray());
+                line = line.replaceAll("[" + UPPER_ROW_SYMBOL + UPPER_COLUMN_SYMBOL + "]", "1");
+                line = line.replaceAll("[" + LOWER_ROW_SYMBOL + LOWER_COLUMN_SYMBOL + "]", "0");
+
+                int row = Integer.parseInt(line.substring(0, ROWS_LOG2), 2);
+                int column = Integer.parseInt(line.substring(ROWS_LOG2), 2);
+                ids.add(row * 8 + column);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }
-
-        ArrayList<Integer> ids = new ArrayList<>();
-        for (char[] boardingPass : boardingPasses) {
-            // rows
-            int amount = ROWS;
-            int lowestRow = 0;
-            for (int i = 0; i < 7; i++) {
-                amount = amount / 2;
-                if (boardingPass[i] == UPPER_ROW_SYMBOL) {
-                    lowestRow += amount;
-                }
-            }
-            // columns
-            amount = COLUMNS;
-            int lowestColumn = 0;
-            for (int i = ROWS_LOG2; i < ROWS_LOG2 + COLUMNS_LOG2; i++) {
-                amount = amount / 2;
-                if (boardingPass[i] == LOWER_ROW_SYMBOL) {
-                    lowestColumn += amount;
-                }
-            }
-            ids.add(lowestRow * 8 + lowestColumn);
         }
         System.out.println("highest seat ID: " + Collections.max(ids));
         // 871: to hight
