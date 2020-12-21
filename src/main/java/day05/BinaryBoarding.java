@@ -47,9 +47,6 @@ Here are some other boarding passes:
     BBFFBBFRLL: row 102, column 4, seat ID 820.
 
 As a sanity check, look through your list of boarding passes. What is the highest seat ID on a boarding pass?
-
-0 - 127 row (2⁷)                            first seven B or F. F lower, B upper)
-8 columns of seats (numbered 0 through 7)   L lower, R upper
  */
 
 import java.io.BufferedReader;
@@ -58,7 +55,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class BinaryBoarding {
