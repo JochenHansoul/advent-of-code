@@ -144,7 +144,7 @@ public class ExpertPassportValidator {
                             correctPassport = eyeColorIsValid;
                         } else if (key.equals("pid")) {
                             correctPassport = value.length() == 9
-                                    && value.replaceAll("[0123456789]", "").length() == 0;
+                                    && value.replaceAll("[0-9]", "").length() == 0;
                         }
                         counter++;
                     }
