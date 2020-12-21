@@ -48,12 +48,62 @@ Here are some other boarding passes:
 
 As a sanity check, look through your list of boarding passes. What is the highest seat ID on a boarding pass?
 
-0 - 127 row (2⁷)
-8 columns of seats (numbered 0 through 7)
+0 - 127 row (2⁷)                            first seven B or F. F lower, B upper)
+8 columns of seats (numbered 0 through 7)   L lower, R upper
  */
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class BinaryBoarding {
     public static void main(String[] args) {
 
+        final Path PATH = Paths.get("src/main/resources/day05/boarding_passes.txt");
+        final char UPPER_ROW = 'B';
+        final char UPPER_COLUMN = 'R';
+
+        ArrayList<char[]> boardingPasses = new ArrayList<>();
+
+        // read file
+        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                boardingPasses.add(line.toCharArray());
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        ArrayList<Integer> ids = new ArrayList<>();
+        // rows
+        for (char[] boardingPass : boardingPasses) {
+            int amount = 128;
+            int lowestRow = 0;
+            for (int i = 0; i < 7; i++) {
+                amount = amount / 2;
+                if (boardingPass[i] == UPPER_ROW) {
+                    lowestRow += amount;
+                }
+            }
+
+            // columns
+            amount = 8;
+            int lowestColumn = 0;
+            for (int i = 7; i < 10; i++) {
+                amount = amount / 2;
+                if (boardingPass[i] == UPPER_COLUMN) {
+                    lowestColumn += amount;
+                }
+            }
+            ids.add(lowestRow * 8 + lowestColumn);
+        }
+        System.out.println("highest seat ID: " + Collections.max(ids));
+        // 871: to hight
+        // 864: right (added 'L' to UPPER_COLUMN in stead of 'R'
     }
 }
