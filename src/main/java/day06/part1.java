@@ -66,26 +66,23 @@ public class part1 {
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             StringBuilder answersGroupBuilder = new StringBuilder();
-            StringBuilder answersOfLastGroup = new StringBuilder();
+            TreeSet<Character> characterTreeSet = new TreeSet<>();
             while ((line = reader.readLine()) != null) {
                 if (line.equals("")) {
-                    TreeSet<Character> characterTreeSet = new TreeSet<>();
                     char[] characters = answersGroupBuilder.toString().toCharArray();
                     for (char c : characters) {
                         characterTreeSet.add(c);
                     }
                     //System.out.println(characterTreeSet);
                     sumAllAnswers += characterTreeSet.size();
+                    characterTreeSet.clear();
                     answersGroupBuilder.setLength(0);
-                    answersOfLastGroup.setLength(0);
                 } else {
                     answersGroupBuilder.append(line);
-                    answersOfLastGroup.append(line);
                 }
             }
             // adding answers of last group
-            TreeSet<Character> characterTreeSet = new TreeSet<>();
-            for (char c : answersOfLastGroup.toString().toCharArray()) {
+            for (char c : answersGroupBuilder.toString().toCharArray()) {
                 characterTreeSet.add(c);
             }
             sumAllAnswers += characterTreeSet.size();
