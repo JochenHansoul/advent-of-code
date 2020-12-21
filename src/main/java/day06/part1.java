@@ -49,5 +49,52 @@ For each group, count the number of questions to which anyone answered "yes". Wh
 
 package day06;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+
 public class part1 {
+    public static void main(String[] args) {
+
+        final Path PATH = Paths.get("src/main/resources/day06/answers.txt");
+
+        int sumAllAnswers = 0;
+
+        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+            String line;
+            StringBuilder answersGroupBuilder = new StringBuilder();
+            StringBuilder answersOfLastGroup = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                if (line.equals("")) {
+                    TreeSet<Character> characterTreeSet = new TreeSet<>();
+                    char[] characters = answersGroupBuilder.toString().toCharArray();
+                    for (char c : characters) {
+                        characterTreeSet.add(c);
+                    }
+                    //System.out.println(characterTreeSet);
+                    sumAllAnswers += characterTreeSet.size();
+                    answersGroupBuilder.setLength(0);
+                    answersOfLastGroup.setLength(0);
+                } else {
+                    answersGroupBuilder.append(line);
+                    answersOfLastGroup.append(line);
+                }
+            }
+            // adding answers of last group
+            TreeSet<Character> characterTreeSet = new TreeSet<>();
+            for (char c : answersOfLastGroup.toString().toCharArray()) {
+                characterTreeSet.add(c);
+            }
+            sumAllAnswers += characterTreeSet.size();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(sumAllAnswers);
+        // 6675: too low
+        // 6686: right (forgot to add the answer of the last group)
+    }
 }
