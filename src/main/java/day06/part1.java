@@ -57,8 +57,18 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class part1 {
-    public static void main(String[] args) {
+    private static final TreeSet<Character> characterTreeSet = new TreeSet<>();
 
+    private static int getAmountUniqueCharacters(StringBuilder sb) {
+        characterTreeSet.clear();
+        for (char c : sb.toString().toCharArray()) {
+            characterTreeSet.add(c);
+        }
+        return characterTreeSet.size();
+    }
+
+
+    public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day06/answers.txt");
 
         int sumAllAnswers = 0;
@@ -66,26 +76,15 @@ public class part1 {
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             StringBuilder answersGroupBuilder = new StringBuilder();
-            TreeSet<Character> characterTreeSet = new TreeSet<>();
             while ((line = reader.readLine()) != null) {
-                if (line.equals("")) {
-                    char[] characters = answersGroupBuilder.toString().toCharArray();
-                    for (char c : characters) {
-                        characterTreeSet.add(c);
-                    }
-                    //System.out.println(characterTreeSet);
-                    sumAllAnswers += characterTreeSet.size();
-                    characterTreeSet.clear();
+                if (line.isEmpty()) {
+                    sumAllAnswers += getAmountUniqueCharacters(answersGroupBuilder);
                     answersGroupBuilder.setLength(0);
                 } else {
                     answersGroupBuilder.append(line);
                 }
             }
-            // adding answers of last group
-            for (char c : answersGroupBuilder.toString().toCharArray()) {
-                characterTreeSet.add(c);
-            }
-            sumAllAnswers += characterTreeSet.size();
+            sumAllAnswers += getAmountUniqueCharacters(answersGroupBuilder); // adding answers of last group
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
