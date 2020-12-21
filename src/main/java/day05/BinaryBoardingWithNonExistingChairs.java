@@ -58,8 +58,7 @@ public class BinaryBoardingWithNonExistingChairs {
 
         for (int i =0; i < binaryNumbers.size(); i++) {
             if (!binaryNumbers.contains(i)) {
-                String binaryString = Integer.toBinaryString(i);
-                binaryString = StringUtils.leftPad(binaryString, LENGTH_SYMBOLS, '0');
+                String binaryString = StringUtils.leftPad(Integer.toBinaryString(i), LENGTH_SYMBOLS, '0');
                 int row = Integer.parseInt(binaryString.substring(0, ROWS_LOG2), 2);
                 int column = Integer.parseInt(binaryString.substring(ROWS_LOG2), 2);
                 System.out.printf("doesn't contain %d, id: %d * 8 + %d = %d%n", i, row, column, row * 8 + column);
