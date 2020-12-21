@@ -64,8 +64,12 @@ public class BinaryBoarding {
     public static void main(String[] args) {
 
         final Path PATH = Paths.get("src/main/resources/day05/boarding_passes.txt");
-        final char UPPER_ROW = 'B';
-        final char UPPER_COLUMN = 'R';
+        final int ROWS = 128;
+        final int COLUMNS = 8;
+        final char UPPER_ROW_SYMBOL = 'B';
+        final char LOWER_ROW_SYMBOL = 'R';
+        final int ROWS_LOG2 = (int) (Math.log(ROWS) / Math.log(2));
+        final int COLUMNS_LOG2 = (int) (Math.log(COLUMNS) / Math.log(2));
 
         ArrayList<char[]> boardingPasses = new ArrayList<>();
 
@@ -80,23 +84,22 @@ public class BinaryBoarding {
         }
 
         ArrayList<Integer> ids = new ArrayList<>();
-        // rows
         for (char[] boardingPass : boardingPasses) {
-            int amount = 128;
+            // rows
+            int amount = ROWS;
             int lowestRow = 0;
             for (int i = 0; i < 7; i++) {
                 amount = amount / 2;
-                if (boardingPass[i] == UPPER_ROW) {
+                if (boardingPass[i] == UPPER_ROW_SYMBOL) {
                     lowestRow += amount;
                 }
             }
-
             // columns
-            amount = 8;
+            amount = COLUMNS;
             int lowestColumn = 0;
-            for (int i = 7; i < 10; i++) {
+            for (int i = ROWS_LOG2; i < ROWS_LOG2 + COLUMNS_LOG2; i++) {
                 amount = amount / 2;
-                if (boardingPass[i] == UPPER_COLUMN) {
+                if (boardingPass[i] == LOWER_ROW_SYMBOL) {
                     lowestColumn += amount;
                 }
             }
@@ -104,6 +107,6 @@ public class BinaryBoarding {
         }
         System.out.println("highest seat ID: " + Collections.max(ids));
         // 871: to hight
-        // 864: right (added 'L' to UPPER_COLUMN in stead of 'R'
+        // 864: right (added 'L' to UPPER_COLUMN_SYMBOL in stead of 'R'
     }
 }
