@@ -1,25 +1,11 @@
 /*
---- Day 6: Custom Customs ---
+--- Part Two ---
 
-As your flight approaches the regional airport where you'll switch to a much larger plane, customs declaration forms
-are distributed to the passengers.
-The form asks a series of 26 yes-or-no questions marked a through z. All you need to do is identify the questions for
-which anyone in your group answers "yes". Since your group is just you, this doesn't take very long.
-However, the person sitting next to you seems to be experiencing a language barrier and asks if you can help. For each
-of the people in their group, you write down the questions for which they answer "yes", one per line.
+As you finish the last group's customs declaration, you notice that you misread one word in the instructions:
+You don't need to identify the questions to which anyone answered "yes"; you need to identify the questions to which
+everyone answered "yes"!
 
-For example:
-abcx
-abcy
-abcz
-
-In this group, there are 6 questions to which anyone answered "yes": a, b, c, x, y, and z.
-(Duplicate answers to the same question don't count extra; each question counts at most once.)
-Another group asks for your help, then another, and eventually you've collected answers from every group on the plane
-(your puzzle input). Each group's answers are separated by a blank line, and within each group, each person's answers
-are on a single line.
-
-For example:
+Using the same example as above:
 abc
 
 a
@@ -37,14 +23,25 @@ a
 b
 
 This list represents answers from five groups:
-    The first group contains one person who answered "yes" to 3 questions: a, b, and c.
-    The second group contains three people; combined, they answered "yes" to 3 questions: a, b, and c.
-    The third group contains two people; combined, they answered "yes" to 3 questions: a, b, and c.
-    The fourth group contains four people; combined, they answered "yes" to only 1 question, a.
-    The last group contains one person who answered "yes" to only 1 question, b.
-In this example, the sum of these counts is 3 + 3 + 3 + 1 + 1 = 11.
+    In the first group, everyone (all 1 person) answered "yes" to 3 questions: a, b, and c.
+    In the second group, there is no question to which everyone answered "yes".
+    In the third group, everyone answered yes to only 1 question, a. Since some people did not answer "yes" to b or c,
+    they don't count.
+    In the fourth group, everyone answered yes to only 1 question, a.
+    In the fifth group, everyone (all 1 person) answered "yes" to 1 question, b.
 
-For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
+In this example, the sum of these counts is 3 + 0 + 1 + 1 + 1 = 6.
+For each group, count the number of questions to which everyone answered "yes". What is the sum of those counts?
+
+
+mogelijke oplossing:
+maak een array van 26 integers
+voor elk antwoord in een groep verhoog de overkomstige waarde in de array met 1
+if c1 == c2 {
+    alphabet[c1 - a]++;
+}
+vergelijk waarden array met aantal groep antwoorden. als gelijk verhoog sumAllAnswers met 1
+reset alfabet array
  */
 
 package day06;
@@ -54,43 +51,55 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.TreeSet;
 
-public class Part1 {
-    private static final TreeSet<Character> characterTreeSet = new TreeSet<>();
-
-    private static int getAmountUniqueCharacters(StringBuilder sb) {
-        characterTreeSet.clear();
-        for (char c : sb.toString().toCharArray()) {
-            characterTreeSet.add(c);
-        }
-        return characterTreeSet.size();
-    }
-
-
+public class Part2 {
     public static void main(String[] args) {
+
         final Path PATH = Paths.get("src/main/resources/day06/answers.txt");
 
         int sumAllAnswers = 0;
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
-            StringBuilder answersGroupBuilder = new StringBuilder();
+            ArrayList<char[]> groupAnswers = new ArrayList<>();
+            ArrayList<Character> firstAnswer = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
-                    sumAllAnswers += getAmountUniqueCharacters(answersGroupBuilder);
-                    answersGroupBuilder.setLength(0);
+                    // clearing and filling firstAnswer
+                    firstAnswer.clear();
+                    for (char c : groupAnswers.get(0)) {
+                        firstAnswer.add(c);
+                    }
+                    // checking answers
+                    for (char[] currentAnswer : groupAnswers) {
+                        ArrayList<Character> sameAnswers = new ArrayList<>();
+                        int i = 0;
+                        while (i < currentAnswer.length) {
+                            char character = currentAnswer[i];
+                            if (firstAnswer.contains(character)) {
+                                sameAnswers.add(character);
+                            }
+                            i++;
+                        }
+                        firstAnswer = sameAnswers;
+                    }
+                    sumAllAnswers += firstAnswer.size();
+                    groupAnswers.clear(); // I forgot to clear group answer!!!
                 } else {
-                    answersGroupBuilder.append(line);
+                    groupAnswers.add(line.toCharArray());
                 }
             }
-            sumAllAnswers += getAmountUniqueCharacters(answersGroupBuilder); // adding answers of last group
+            // repeat for last answer is apparently not necessary
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
         System.out.println(sumAllAnswers);
-        // 6675: too low
-        // 6686: right (forgot to add the answer of the last group)
+        // 482: wrong (answer is too low)
+        // 483: wrong (answer is too low)
+        // 36 (wrong)
+        // 3476 (right), I accidentally entered 3467 first
     }
 }
