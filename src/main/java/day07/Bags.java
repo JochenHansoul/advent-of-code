@@ -43,24 +43,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Bags {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
+        String startBag = "shiny gold";
+
+        ArrayList<String> appliedBags = new ArrayList<>();
+        appliedBags.add(startBag);
+
+        ArrayList<String> keyBags = new ArrayList<>();
+        ArrayList<HashMap<String, Integer>> valuesBags = new ArrayList<>();
 
         HashMap<String, HashMap<String, Integer>> bagRules = new HashMap<>();
         HashMap<String, Integer> bagContent = new HashMap<>();
-
-        ArrayList<String> currentBags = new ArrayList<>();
-
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
                 String[] lineArray = line.split(" ");
+                //keyBags.add(lineArray[0] + " " + lineArray[1]);
                 bagContent.clear();
                 int counter = 3;
                 while (counter < lineArray.length) {
@@ -69,10 +72,27 @@ public class Bags {
                     }
                     counter++;
                 }
+                //valuesBags.add(bagContent);
                 bagRules.put(lineArray[0] + " " + lineArray[1], bagContent); // current bag and what it contains
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+        int i = 0;
+        while (i < valuesBags.size()) {
+            HashMap<String, Integer> valuesBag = valuesBags.get(i);
+            int j = 0;
+            while (j < appliedBags.size()) {
+                if (valuesBag.containsKey(appliedBags.get(j))) {
+                    appliedBags.add(keyBags.get(i));
+                }
+                j++;
+            }
+            i++;
+        }
+
+        System.out.println("amount: " + appliedBags.size());
+        // 594 (wrong) too hight. Per ongeluk valueVags.size() gebruikt i.p.v appliedBags.size()
     }
 }
