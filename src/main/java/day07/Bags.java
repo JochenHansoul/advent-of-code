@@ -43,7 +43,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Bags {
     public static void main(String[] args) {
@@ -53,47 +52,32 @@ public class Bags {
         ArrayList<String> appliedBags = new ArrayList<>();
         appliedBags.add(startBag);
 
-        ArrayList<String> keyBags = new ArrayList<>();
-        ArrayList<HashMap<String, Integer>> valuesBags = new ArrayList<>();
+        ArrayList<String> bags = new ArrayList<>();
+        ArrayList<ArrayList<String>> valuesBags = new ArrayList<>();
 
-        HashMap<String, HashMap<String, Integer>> bagRules = new HashMap<>();
-        HashMap<String, Integer> bagContent = new HashMap<>();
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
                 String[] lineArray = line.split(" ");
-                //keyBags.add(lineArray[0] + " " + lineArray[1]);
-                bagContent.clear();
+                bags.add(lineArray[0] + " " + lineArray[1]);
+                ArrayList<String> currentBagValues = new ArrayList<>(); // This arraylist needed to be created again i.s.o. cleared!
                 int counter = 3;
                 while (counter < lineArray.length) {
                     if ((lineArray[counter].equals("bags") || lineArray[counter].equals("bag")) && !lineArray[counter - 1].equals("other")) {
-                        bagContent.put(lineArray[counter - 2] + " " + lineArray[counter - 1], Integer.parseInt(lineArray[counter - 3]));
+                        currentBagValues.add(lineArray[counter - 2] + " " + lineArray[counter - 1]);
+                        //Integer.parseInt(lineArray[counter - 3])
                     }
                     counter++;
                 }
-                //valuesBags.add(bagContent);
-                bagRules.put(lineArray[0] + " " + lineArray[1], bagContent); // current bag and what it contains
+                valuesBags.add(currentBagValues);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
-
-        String[] keys = bagRules.keySet().toArray(new String[0]);
-        System.out.println(keys);
-        System.out.println(bagRules.values());
-
-        /*for (keyAndValue : bagRules) {
-            int i = 0;
-            while (i < appliedBags.size()) {
-                if (bagValues.containsKey(appliedBags.get(i))) {
-                    appliedBags.add(bagRules.)
-                }
-                i++;
-            }
-        }*/
-
+        for (int i = 0; i < bags.size(); i++) {
+            System.out.println(bags.get(i) + " " + valuesBags.get(i));
+        }
         System.out.println("amount: " + appliedBags.size());
         // 594 (wrong) too hight. Per ongeluk valueVags.size() gebruikt i.p.v appliedBags.size()
     }
