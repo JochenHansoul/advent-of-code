@@ -79,18 +79,20 @@ public class Bags {
             System.out.println(e.getMessage());
         }
 
-        int i = 0;
-        while (i < valuesBags.size()) {
-            HashMap<String, Integer> valuesBag = valuesBags.get(i);
-            int j = 0;
-            while (j < appliedBags.size()) {
-                if (valuesBag.containsKey(appliedBags.get(j))) {
-                    appliedBags.add(keyBags.get(i));
+
+        String[] keys = bagRules.keySet().toArray(new String[0]);
+        System.out.println(keys);
+        System.out.println(bagRules.values());
+
+        /*for (keyAndValue : bagRules) {
+            int i = 0;
+            while (i < appliedBags.size()) {
+                if (bagValues.containsKey(appliedBags.get(i))) {
+                    appliedBags.add(bagRules.)
                 }
-                j++;
+                i++;
             }
-            i++;
-        }
+        }*/
 
         System.out.println("amount: " + appliedBags.size());
         // 594 (wrong) too hight. Per ongeluk valueVags.size() gebruikt i.p.v appliedBags.size()
