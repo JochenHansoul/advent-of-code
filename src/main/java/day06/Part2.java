@@ -52,40 +52,45 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 public class Part2 {
+
+    private static ArrayList<Character> firstAnswer = new ArrayList<>();
+
+    private static int getNumberOfUniqueAnswers(ArrayList<char[]> groupAnswers) {
+        // clearing and filling firstAnswer
+        firstAnswer.clear();
+        for (char c : groupAnswers.get(0)) {
+            firstAnswer.add(c);
+        }
+        // checking answers
+        for (char[] currentAnswer : groupAnswers) {
+            ArrayList<Character> sameAnswers = new ArrayList<>();
+            int i = 0;
+            while (i < currentAnswer.length) {
+                char character = currentAnswer[i];
+                if (firstAnswer.contains(character)) {
+                    sameAnswers.add(character);
+                }
+                i++;
+            }
+            firstAnswer = sameAnswers;
+        }
+        return firstAnswer.size();
+    }
+
     public static void main(String[] args) {
 
         final Path PATH = Paths.get("src/main/resources/day06/answers.txt");
 
-        int sumAllAnswers = 0;
+        int sumUniqueGroupAnswers = 0;
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             ArrayList<char[]> groupAnswers = new ArrayList<>();
-            ArrayList<Character> firstAnswer = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
-                    // clearing and filling firstAnswer
-                    firstAnswer.clear();
-                    for (char c : groupAnswers.get(0)) {
-                        firstAnswer.add(c);
-                    }
-                    // checking answers
-                    for (char[] currentAnswer : groupAnswers) {
-                        ArrayList<Character> sameAnswers = new ArrayList<>();
-                        int i = 0;
-                        while (i < currentAnswer.length) {
-                            char character = currentAnswer[i];
-                            if (firstAnswer.contains(character)) {
-                                sameAnswers.add(character);
-                            }
-                            i++;
-                        }
-                        firstAnswer = sameAnswers;
-                    }
-                    sumAllAnswers += firstAnswer.size();
+                    sumUniqueGroupAnswers += getNumberOfUniqueAnswers(groupAnswers);
                     groupAnswers.clear(); // I forgot to clear group answer!!!
                 } else {
                     groupAnswers.add(line.toCharArray());
@@ -96,7 +101,7 @@ public class Part2 {
             System.out.println(e.getMessage());
         }
 
-        System.out.println(sumAllAnswers);
+        System.out.println(sumUniqueGroupAnswers);
         // 482: wrong (answer is too low)
         // 483: wrong (answer is too low)
         // 36 (wrong)
