@@ -43,7 +43,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.TreeSet;
 
 public class Bags {
@@ -102,10 +101,6 @@ public class Bags {
             newAppliedBags = new ArrayList<>();
         }
 
-        /*
-        plaid purple: striped violet, striped crimson
-         */
-
         TreeSet<String> ts = new TreeSet<>();
         for (ArrayList<String> list : allAppliedBags) {
             ts.addAll(list);
@@ -115,5 +110,6 @@ public class Bags {
         System.out.println("amount: " + ts.size()); // same as allAppliedBagallAppliedBags.size()s.size()
         // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
         // 301 (wrong) too high
+        // 222 (correct)
     }
 }
