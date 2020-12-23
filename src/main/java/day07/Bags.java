@@ -44,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TreeSet;
 
 public class Bags {
     public static void main(String[] args) {
@@ -80,35 +81,39 @@ public class Bags {
         currentAppliedBags.add(START_BAG);
 
         ArrayList<String> newBagList = new ArrayList<>();
-        /*while (currentAppliedBags.size() != 0) {
-
-        }*/
-
-        for (int i = 0; i < bags.size(); i++) { // runs trough all the available bag rules
-            // bag: [bag, bag, bag...]
-            newBagList = new ArrayList<>();
-            // checking if [goldBag, ....] is withing the values of the current bag
-            for (String currentAppliedBag : currentAppliedBags) {
-                if (valuesBags.get(i).contains(currentAppliedBag)) {
-                    newBagList.add(bags.get(i));
+        ArrayList<String> newAppliedBags = new ArrayList<>();
+        while (currentAppliedBags.size() != 0) {
+            //System.out.println(currentAppliedBags);
+            for (int i = 0; i < bags.size(); i++) { // runs trough all the available bag rules
+                // bag: [bag, bag, bag...]
+                // checking if [goldBag, ....] is withing the values of the current bag
+                for (String currentAppliedBag : currentAppliedBags) {
+                    if (valuesBags.get(i).contains(currentAppliedBag)) {
+                        newBagList.add(bags.get(i));
+                    }
+                }
+                if (!newBagList.isEmpty()) {
+                    newAppliedBags.add(newBagList.get(0));
+                    newBagList = new ArrayList<>();
                 }
             }
-            if (!newBagList.isEmpty()) {
-                allAppliedBags.add(newBagList);
-                currentAppliedBags.add(newBagList.get(0));
-            }
+            allAppliedBags.add(newAppliedBags);
+            currentAppliedBags = newAppliedBags;
+            newAppliedBags = new ArrayList<>();
         }
-        System.out.println(currentAppliedBags);
 
+        /*
+        plaid purple: striped violet, striped crimson
+         */
 
-        int counter = 0;
+        TreeSet<String> ts = new TreeSet<>();
         for (ArrayList<String> list : allAppliedBags) {
-            counter += list.size();
+            ts.addAll(list);
         }
 
         System.out.println();
-        System.out.println(allAppliedBags);
-        System.out.println("amount: " + counter); // same as allAppliedBagallAppliedBags.size()s.size()
-        // 594 (wrong) too hight. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
+        System.out.println("amount: " + ts.size()); // same as allAppliedBagallAppliedBags.size()s.size()
+        // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
+        // 301 (wrong) too high
     }
 }
