@@ -43,14 +43,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Bags {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
-        String startBag = "shiny gold";
-
-        ArrayList<String> appliedBags = new ArrayList<>();
-        appliedBags.add(startBag);
+        final String START_BAG = "shiny gold";
 
         ArrayList<String> bags = new ArrayList<>();
         ArrayList<ArrayList<String>> valuesBags = new ArrayList<>();
@@ -75,10 +73,42 @@ public class Bags {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        for (int i = 0; i < bags.size(); i++) {
-            System.out.println(bags.get(i) + " " + valuesBags.get(i));
+
+        ArrayList<ArrayList<String>> allAppliedBags = new ArrayList<>();
+
+        ArrayList<String> currentAppliedBags = new ArrayList<>();
+        currentAppliedBags.add(START_BAG);
+
+        ArrayList<String> newBagList = new ArrayList<>();
+        /*while (currentAppliedBags.size() != 0) {
+
+        }*/
+
+        for (int i = 0; i < bags.size(); i++) { // runs trough all the available bag rules
+            // bag: [bag, bag, bag...]
+            newBagList = new ArrayList<>();
+            // checking if [goldBag, ....] is withing the values of the current bag
+            for (String currentAppliedBag : currentAppliedBags) {
+                if (valuesBags.get(i).contains(currentAppliedBag)) {
+                    newBagList.add(bags.get(i));
+                }
+            }
+            if (!newBagList.isEmpty()) {
+                allAppliedBags.add(newBagList);
+                currentAppliedBags.add(newBagList.get(0));
+            }
         }
-        System.out.println("amount: " + appliedBags.size());
-        // 594 (wrong) too hight. Per ongeluk valueVags.size() gebruikt i.p.v appliedBags.size()
+        System.out.println(currentAppliedBags);
+
+
+        int counter = 0;
+        for (ArrayList<String> list : allAppliedBags) {
+            counter += list.size();
+        }
+
+        System.out.println();
+        System.out.println(allAppliedBags);
+        System.out.println("amount: " + counter); // same as allAppliedBagallAppliedBags.size()s.size()
+        // 594 (wrong) too hight. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
     }
 }
