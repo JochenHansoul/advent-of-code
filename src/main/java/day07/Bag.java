@@ -1,30 +1,27 @@
 package day07;
 
+import java.util.HashMap;
+
 public class Bag {
     public final String COLOR;
-    private Bag[] childColors;
-    private int[] childAmounts;
+    private HashMap<Bag, Integer> content;
 
     public Bag(String color) {
-        this(color, null, null);
+        this(color, null);
     }
 
-    public Bag(String color, Bag[] containsColors, int[] containsAmounts) {
+    public Bag(String color, HashMap<Bag, Integer> bagContent) {
         this.COLOR = color;
-        this.childColors = containsColors;
-        this.childAmounts = containsAmounts;
+        this.content = bagContent;
     }
 
-    public void setContent(Bag[] containsColors, int[] containsAmounts) {
-        this.childColors = containsColors;
-        this.childAmounts = containsAmounts;
+    public void setContent(HashMap<Bag, Integer> bagContent) {
+        if (this.content == null) {
+            this.content = bagContent;
+        }
     }
 
-    public Bag[] childColors() {
-        return childColors;
-    }
-
-    public int[] childAmounts() {
-        return childAmounts;
+    public HashMap<Bag, Integer> getContent() {
+        return this.content;
     }
 }
