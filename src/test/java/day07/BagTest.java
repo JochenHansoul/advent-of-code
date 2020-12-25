@@ -7,16 +7,22 @@ import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
+// er lijkt geen manier te zijn om een array van waardes of keys die je met een indexwaarde eruit kunt halen
+
 public class BagTest {
-    private HashMap<Bag, Integer> bags = new HashMap<>();
+    private HashMap<Bag, Integer> defaultBagsEmpty = new HashMap<>();
+    private HashMap<Bag, Integer> defaultBagsFull = new HashMap<>();
 
     @Before
     public void init() {
-        bags.put( new Bag("dark red"), 1);
-        bags.put(new Bag("dark blue"), 2);
-        bags.put(new Bag("dark green"), 3);
-        bags.put(new Bag("dark z"), 4);
-        bags.put(new Bag("dark grey"), 5);
+        defaultBagsEmpty.put( new Bag("dark red"), 1);
+        defaultBagsEmpty.put(new Bag("dark blue"), 2);
+        defaultBagsEmpty.put(new Bag("dark green"), 3);
+        defaultBagsEmpty.put(new Bag("dark z"), 4);
+        defaultBagsEmpty.put(new Bag("dark grey"), 5);
+
+        defaultBagsFull.put(new Bag("bright red", defaultBagsEmpty), 1);
+        defaultBagsFull.put(new Bag("bright blue", defaultBagsEmpty), 2);
     }
 
     @Test
@@ -34,32 +40,52 @@ public class BagTest {
 
     @Test
     public void testConstructorWithChildBags() {
-        Bag bag1 = new Bag("dark black", bags);
-        assertEquals("dark black", bag1.COLOR);
-
-        // must find all bags and it's amount
-        //bags.containsKey()
-        for (Bag bag : bags.keySet()) {
-            System.out.println(bags.get(bag) + " " + bag.COLOR);
-        }
-
-        /*
-        // er lijkt geen manier te zijn om een array van waardes of keys die je met een indexwaarde eruit kunt halen
-        Set<Bag> bagKeys = bags.keySet();
-        Collection<Integer> bagValues = bags.values();
-        Integer[] bvArray = (Integer[]) bagValues.toArray();
-        */
+        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
+        assertEquals("dark black", darkBlackBag.COLOR);
     }
 
-    // test setting
-    // test setting already set
+    @Test
+    public void testLengthBagContent() {
+        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
+        assertEquals(defaultBagsEmpty.size(), darkBlackBag.getContent().size()); // amount of bags are the same
+    }
 
-
-    /*@Test
-    public void testBagWithEmptyChildrenAreEmpty() {
-        Bag bag = new Bag("dark yellow", bags);
-        for (int i = 0; i < bag.getContent().size(); i++) {
-            assertNull(bag.getContent().get("dark red"));
+    @Test
+    public void testBagContentAmountsAreRight() {
+        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
+        HashMap<Bag, Integer> bagContent = darkBlackBag.getContent();
+        for (Bag bag : bagContent.keySet()) {
+            assertEquals(defaultBagsEmpty.get(bag), bagContent.get(bag)); // amount of certain bag are the same
         }
-    }*/
+    }
+
+    @Test
+    public void testBagWithEmptyChildrenIsEmpty() {
+        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
+        for (Bag bag : darkBlackBag.getContent().keySet()) {
+            assertNull(bag.getContent());
+        }
+    }
+
+    @Test
+    public void testBagWithFilledChildrenAreFull() {
+        Bag darkBlackBag = new Bag("dark black", defaultBagsFull);
+        for (Bag bag : darkBlackBag.getContent().keySet()) {
+            assertNotNull(bag.getContent());
+        }
+    }
+
+    @Test
+    public void testSetContentBag() {
+        Bag darkBlackBag = new Bag("dark black");
+        darkBlackBag.setContent(defaultBagsEmpty);
+        assertEquals(defaultBagsEmpty, darkBlackBag.getContent());
+    }
+
+    @Test
+    public void testSettingContentOfBagThatAlreadyHasContent() {
+        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
+        darkBlackBag.setContent(defaultBagsFull);
+        assertEquals(defaultBagsEmpty, darkBlackBag.getContent());
+    }
 }
