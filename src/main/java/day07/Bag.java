@@ -38,4 +38,18 @@ public class Bag {
     public int hashCode() {
         return Objects.hash(COLOR);
     }
+
+    @Override
+    public String toString() {
+        if (content != null && content.size() != 0) {
+            StringBuilder sb = new StringBuilder();
+            for (Bag bag : content.keySet()) {
+                sb.append(content.get(bag)).append(" ");
+                sb.append(bag.COLOR).append(", ");
+            }
+            return String.format("%s {%s}", this.COLOR, sb.substring(0, sb.length() - 2));
+        } else {
+            return this.COLOR + " {}";
+        }
+    }
 }
