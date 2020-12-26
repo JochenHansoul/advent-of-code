@@ -84,15 +84,11 @@ public class BagsInside {
 
     private static int getAmountOfChildBags(Bag bag) {
         HashMap<Bag, Integer> content = bag.getContent();
-        if (content == null || content.size() == 0) {
-            return 1;
-        } else {
-            int counter = 1;
-            for (Bag child : content.keySet()) {
-                counter += content.get(child) * getAmountOfChildBags(child);
-            }
-            return counter;
+        int counter = 1;
+        for (Bag child : content.keySet()) {
+            counter += content.get(child) * getAmountOfChildBags(child);
         }
+        return counter;
     }
 
     private static Bag addBagToListOrGetAlreadyAddedBag(HashSet<Bag> bags, Bag bag) {
