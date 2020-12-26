@@ -49,76 +49,74 @@ public class Bags {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
         final String START_BAG = "shiny gold";
 
-        HashSet<Bag> bags = new HashSet<>();
-        Bag startBag = new Bag(START_BAG);
-        bags.add(startBag);
+        ArrayList<Bag> bagList = new ArrayList<>();
+        ArrayList<String[]> arrayLines = new ArrayList<>();
 
+        // adding bags to bag rules (but not yet content)
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
                 String[] lineParts = line.split(" ");
-                // current bag content
-                HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
-                int counter = 3;
-                while (counter < lineParts.length) {
-                    if ((lineParts[counter].equals("bags") || lineParts[counter].equals("bag")) && !lineParts[counter - 1].equals("other")) {
-                        Bag childBag = new Bag(lineParts[counter - 2] + " " + lineParts[counter - 1]);
-                        if (bags.contains(childBag)) {
-                            childBag = getAlreadyAddedBag(bags, childBag);
-                        }
-                        currentBagContent.put(childBag, Integer.parseInt(lineParts[counter - 3]));
-                    }
-                    counter++;
-                }
-                // current bag
-                Bag currentBag = new Bag(lineParts[0] + " " + lineParts[1]);
-                if (bags.contains(currentBag)) {
-                    getAlreadyAddedBag(bags, currentBag).setContent(currentBagContent);
-                } else {
-                    currentBag.setContent(currentBagContent);
-                    bags.add(currentBag);
-                }
+                bagList.add(new Bag(lineParts[0] + " " + lineParts[1]));
+                arrayLines.add(lineParts);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-        HashSet<Bag> rules = new HashSet<>();
+        Bag startBag = null;
+
+        // adding child content
+        Bag[] bagArray = bagList.toArray(bagList.toArray(new Bag[0]));
+        for (int i = 0; i < bagList.size(); i++) {
+            Bag bag = bagArray[i];
+            String[] lineParts = arrayLines.get(i);
+            HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
+            if (!lineParts[4].equals("no")) {
+                for (int j = 4; j < lineParts.length; j++) {
+                    if ((lineParts[j].equals("bags") || lineParts[j].equals("bag"))) {
+                        Bag childBag = null;
+                        String color = lineParts[j - 2] + " " + lineParts[j - 1];
+                        int counter = 0;
+                        while (counter < bagArray.length) {
+                            if (bagArray[counter].COLOR.equals(color)) {
+                                childBag = bagArray[counter];
+                                counter = bagArray.length;
+                            }
+                            counter++;
+                        }
+                        currentBagContent.put(childBag, Integer.parseInt(lineParts[j - 3]));
+                    }
+                }
+            }
+            bag.setContent(currentBagContent);
+            if (bag.COLOR.equals(START_BAG)) {
+                startBag = bag;
+            }
+        }
+
+        // getting all applied bag rules
+        HashSet<Bag> rulesAppliedToSelectedBag = new HashSet<>();
         HashSet<Bag> parentBags = new HashSet<>();
         parentBags.add(startBag);
-        HashSet<Bag> newParentBags = null;
-        while (newParentBags == null || parentBags.size() != 0) {
-            newParentBags = new HashSet<>();
-            for (Bag bag : bags) {
+        while (parentBags.size() != 0) {
+            HashSet<Bag> newParentBags = new HashSet<>();
+            for (Bag bag : bagArray) {
                 for (Bag checkedBag : parentBags) {
                     HashMap<Bag, Integer> content = bag.getContent();
                     if (content.containsKey(checkedBag)) {
                         newParentBags.add(bag);
-                        rules.add(bag);
+                        rulesAppliedToSelectedBag.add(bag);
                     }
                 }
             }
             parentBags = newParentBags;
         }
 
-        System.out.println("amount: " + rules.size()); // same as allAppliedBagallAppliedBags.size()s.size()
+        System.out.println("amount: " + rulesAppliedToSelectedBag.size()); // same as allAppliedBagallAppliedBags.size()s.size()
         // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
         // 301 (wrong) too high
         // 222 (correct)
-    }
-
-    private static Bag getAlreadyAddedBag(HashSet<Bag> bags, Bag alreadyAddedBag) {
-        Bag bag = null;
-        Bag[] arrayBags = bags.toArray(new Bag[0]);
-        int i = 0;
-        while (i < arrayBags.length) {
-            if (arrayBags[i].COLOR.equals(alreadyAddedBag.COLOR)) {
-                bag = arrayBags[i];
-                i = arrayBags.length;
-            }
-            i++;
-        }
-        return bag;
     }
 }
