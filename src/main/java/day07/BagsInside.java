@@ -37,73 +37,78 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.TreeSet;
+import java.util.*;
 
 public class BagsInside {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
         final String START_BAG = "shiny gold";
 
-        ArrayList<String> bags = new ArrayList<>();
-        ArrayList<ArrayList<String>> valuesBagNames = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> valuesBagAmounts = new ArrayList<>();
+        HashSet<Bag> bags = new HashSet<>();
+        Bag startBag = new Bag(START_BAG);
+        bags.add(startBag);
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
-                String[] lineArray = line.split(" ");
-                bags.add(lineArray[0] + " " + lineArray[1]);
-                ArrayList<String> currentBagValuesNames = new ArrayList<>(); // This arraylist needed to be created again i.s.o. cleared!
-                ArrayList<Integer> currentBagValuesAmounts = new ArrayList<>(); // This arraylist needed to be created again i.s.o. cleared!
-                int counter = 3;
-                while (counter < lineArray.length) {
-                    if ((lineArray[counter].equals("bags") || lineArray[counter].equals("bag")) && !lineArray[counter - 1].equals("other")) {
-                        currentBagValuesNames.add(lineArray[counter - 2] + " " + lineArray[counter - 1]);
-                        currentBagValuesAmounts.add(Integer.parseInt(lineArray[counter - 3]));
+                String[] lineParts = line.split(" ");
+                // current bag content
+                HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
+                if (!lineParts[4].equals("no")) {
+                    int counter = 4;
+                    while (counter < lineParts.length) {
+                        if ((lineParts[counter].equals("bags") || lineParts[counter].equals("bag"))) {
+                            Bag childBag = new Bag(lineParts[counter - 2] + " " + lineParts[counter - 1]);
+                            childBag = addBagToListOrGetAlreadyAddedBag(bags, childBag);
+                            currentBagContent.put(childBag, Integer.parseInt(lineParts[counter - 3]));
+                        }
+                        counter++;
                     }
-                    counter++;
                 }
-                valuesBagNames.add(currentBagValuesNames);
-                valuesBagAmounts.add(currentBagValuesAmounts);
+                // current bag
+                Bag currentBag = new Bag(lineParts[0] + " " + lineParts[1]);
+                currentBag = addBagToListOrGetAlreadyAddedBag(bags, currentBag);
+                currentBag.setContent(currentBagContent);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-        ArrayList<ArrayList<String>> allAppliedBags = new ArrayList<>();
+        int amountOfBags = getAmountOfChildBags(startBag) - 1;
+        System.out.println("amount of child bags: " + amountOfBags);
+        // 801 (wrong) too low
+        // 13265 (wrong) too high
+        // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
+    }
 
-        ArrayList<String> currentAppliedBags = new ArrayList<>();
-        currentAppliedBags.add(START_BAG);
-
-        ArrayList<String> newBagList = new ArrayList<>();
-        ArrayList<String> newAppliedBags = new ArrayList<>();
-        while (currentAppliedBags.size() != 0) {
-            //System.out.println(currentAppliedBags);
-            for (int i = 0; i < bags.size(); i++) { // runs trough all the available bag rules
-                // bag: [bag, bag, bag...]
-                // checking if [goldBag, ....] is withing the values of the current bag
-                for (String currentAppliedBag : currentAppliedBags) {
-                    if (valuesBagNames.get(i).contains(currentAppliedBag)) {
-                        newBagList.add(bags.get(i));
-                        // insert values here
-                    }
-                }
-                if (!newBagList.isEmpty()) {
-                    newAppliedBags.add(newBagList.get(0));
-                    newBagList = new ArrayList<>();
-                }
+    private static int getAmountOfChildBags(Bag bag) {
+        HashMap<Bag, Integer> content = bag.getContent();
+        if (content == null || content.size() == 0) {
+            return 1;
+        } else {
+            int counter = 1;
+            for (Bag child : content.keySet()) {
+                counter += content.get(child) * getAmountOfChildBags(child);
             }
-            allAppliedBags.add(newAppliedBags);
-            currentAppliedBags = newAppliedBags;
-            newAppliedBags = new ArrayList<>();
+            return counter;
         }
+    }
 
-        TreeSet<String> ts = new TreeSet<>();
-        for (ArrayList<String> list : allAppliedBags) {
-            ts.addAll(list);
+    private static Bag addBagToListOrGetAlreadyAddedBag(HashSet<Bag> bags, Bag bag) {
+        if (bags.contains(bag)) {
+            Bag[] arrayBags = bags.toArray(new Bag[0]);
+            int i = 0;
+            while (i < arrayBags.length) {
+                if (arrayBags[i].COLOR.equals(bag.COLOR)) {
+                    bag = arrayBags[i];
+                    i = arrayBags.length;
+                }
+                i++;
+            }
+        } else {
+            bags.add(bag);
         }
-
+        return bag;
     }
 }
