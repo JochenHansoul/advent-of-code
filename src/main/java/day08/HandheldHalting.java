@@ -55,8 +55,52 @@ accumulator?
 
 package day08;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.TreeSet;
+
 public class HandheldHalting {
     public static void main(String[] args) {
+        final Path PATH = Paths.get("src/main/resources/day08/boot_code.txt");
 
+
+        ArrayList<String> instructions = new ArrayList<>();
+        ArrayList<Integer> arguments = new ArrayList<>();
+        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] lineParts = line.split(" ");
+                instructions.add(lineParts[0]);
+                arguments.add(Integer.parseInt(lineParts[1]));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // instructions: acc, jmp, or nop
+        int accumulator = 0;
+        TreeSet<Integer> alreadyAddedSteps = new TreeSet<>();
+        int i = 0;
+        while (i < instructions.size()) {
+            if (alreadyAddedSteps.contains(i)) {
+                i = instructions.size();
+            } else {
+                alreadyAddedSteps.add(i);
+                String instruction = instructions.get(i);
+                if (instruction.equals("acc")) {
+                    accumulator += arguments.get(i);
+                    i++;
+                } else if (instruction.equals("jmp")) {
+                    i += arguments.get(i);
+                } else if (instruction.equals("nop")) {
+                    i++;
+                }
+            }
+        }
+        System.out.println("value accumulator: " + accumulator);
     }
 }
