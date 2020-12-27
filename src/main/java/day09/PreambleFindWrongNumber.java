@@ -84,9 +84,10 @@ public class PreambleFindWrongNumber {
 
         int index = PREAMBLE;
         boolean numberIsCorrect = true;
+        long number = 0;
         while (index < numbers.size() && numberIsCorrect) {
             numberIsCorrect = false;
-            long number = numbers.get(index);
+            number = numbers.get(index);
             // checking if number is correct
             int firstNumber = index - PREAMBLE;
             while (firstNumber < index - 1) {
@@ -104,7 +105,7 @@ public class PreambleFindWrongNumber {
             index++;
         }
 
-        System.out.println("wrong number is: " + numbers.get(index - 1));
-
+        System.out.println("wrong number is: " + number);
+        // 104054607 (correct)
     }
 }
