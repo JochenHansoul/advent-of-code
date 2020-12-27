@@ -74,8 +74,8 @@ public class FindCorruption {
             System.out.println(e.getMessage());
         }
 
-        int accumulator = getAccumulator(instructions, arguments);
-        System.out.println("value accumulator: " + accumulator);
+        System.out.println("value accumulator: " + getAccumulator(instructions, arguments));
+        // 1174 (right)
     }
 
     private static int getAccumulator(ArrayList<String> instructions, ArrayList<Integer> arguments) {
@@ -83,41 +83,41 @@ public class FindCorruption {
         int accumulator = 0;
         int counter = 0;
         int currentLine = 0;
-        boolean instructionIsChanged = false;
-        boolean jumpReachedEnd = false;
+        boolean instructionHasChanged = false;
+        boolean instructionReachedEndOfLine = false;
         while (counter < instructions.size()) {
             // change an instruction so that the program runs
-            if (!jumpReachedEnd) {
+            if (!instructionReachedEndOfLine) {
                 // change jmp to nop
-                if (instructionIsChanged) {
+                if (instructionHasChanged) {
                     instructions.set(currentLine, JUMP); // resetting original instruction
                     currentLine++;
-                    instructionIsChanged = false;
+                    instructionHasChanged = false;
                 }
-                while (!instructionIsChanged && !jumpReachedEnd) {
+                while (!instructionHasChanged && !instructionReachedEndOfLine) {
                     if (instructions.get(currentLine).equals(JUMP)) {
                         instructions.set(currentLine, NO_OPERATION);
-                        instructionIsChanged = true;
+                        instructionHasChanged = true;
                     } else {
                         currentLine++;
                         // resetting current line and go to change the next instruction
                         if (currentLine == instructions.size()) {
                             currentLine = 0;
-                            jumpReachedEnd = true;
+                            instructionReachedEndOfLine = true;
                         }
                     }
                 }
             } else {
                 // change nop to jmp
-                if (instructionIsChanged) {
+                if (instructionHasChanged) {
                     instructions.set(currentLine, NO_OPERATION); // resetting original instruction
                     currentLine++;
-                    instructionIsChanged = false;
+                    instructionHasChanged = false;
                 }
-                while (!instructionIsChanged) {
+                while (!instructionHasChanged) {
                     if (instructions.get(currentLine).equals(NO_OPERATION)) {
                         instructions.set(currentLine, JUMP);
-                        instructionIsChanged = true;
+                        instructionHasChanged = true;
                     } else {
                         currentLine++;
                     }
