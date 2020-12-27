@@ -67,7 +67,6 @@ public class HandheldHalting {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day08/boot_code.txt");
 
-
         ArrayList<String> instructions = new ArrayList<>();
         ArrayList<Integer> arguments = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
@@ -82,6 +81,12 @@ public class HandheldHalting {
         }
 
         // instructions: acc, jmp, or nop
+        int accumulator = getAccumulator(instructions, arguments);
+        System.out.println("value accumulator: " + accumulator);
+        // 1744 (right)
+    }
+
+    private static int getAccumulator(ArrayList<String> instructions, ArrayList<Integer> arguments) {
         int accumulator = 0;
         TreeSet<Integer> alreadyAddedSteps = new TreeSet<>();
         int i = 0;
@@ -101,6 +106,6 @@ public class HandheldHalting {
                 }
             }
         }
-        System.out.println("value accumulator: " + accumulator);
+        return accumulator;
     }
 }
