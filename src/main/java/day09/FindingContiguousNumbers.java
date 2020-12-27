@@ -43,7 +43,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class FindingContiguousNumbers {
@@ -95,21 +94,24 @@ public class FindingContiguousNumbers {
             // running trough whole list with x amount of numbers
             index = 0;
             while (index < numbers.size() - currentAmountOfNumbers && !contiguousListIsFound) {
-                contiguousNumbers.clear();
                 long sumContiguousNumbers = 0;
                 for (int i = index; i < index + currentAmountOfNumbers; i++) {
-                    contiguousNumbers.add(numbers.get(i));
                     sumContiguousNumbers += numbers.get(i);
                 }
                 if (number == sumContiguousNumbers) {
+                    for (int i = index; i < index + currentAmountOfNumbers; i++) {
+                        contiguousNumbers.add(numbers.get(i));
+                    }
                     contiguousListIsFound = true;
+                } else {
+                    index++;
                 }
-                index++;
             }
             currentAmountOfNumbers++;
         }
 
         long sumSmallestAndHighestNumber = Collections.min(contiguousNumbers) + Collections.max(contiguousNumbers);
         System.out.println("sum highest and lowest number: " + sumSmallestAndHighestNumber);
+        // 13935797 (correct)
     }
 }
