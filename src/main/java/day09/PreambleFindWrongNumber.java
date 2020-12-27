@@ -69,7 +69,7 @@ import java.util.ArrayList;
 public class PreambleFindWrongNumber {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day09/numbers.txt");
-        final int PREAMBLE = 25; // don't forget to set 25!!!!!!!!!!!
+        final int PREAMBLE = 25; // don't forget to change!!!!!!!!!!!
 
         ArrayList<Long> numbers = new ArrayList<>();
 
@@ -90,7 +90,6 @@ public class PreambleFindWrongNumber {
             // checking if number is correct
             int firstNumber = index - PREAMBLE;
             while (firstNumber < index - 1) {
-                // needs another loop for second number
                 int secondNumber = firstNumber + 1;
                 while (secondNumber < index) {
                     if (number == numbers.get(firstNumber) + numbers.get(secondNumber)) {
