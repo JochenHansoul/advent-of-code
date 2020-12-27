@@ -64,17 +64,48 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class PreambleFindWrongNumber {
     public static void main(String[] args) {
-        final Path PATH = Paths.get("src/main/resources/day09/example.txt");
+        final Path PATH = Paths.get("src/main/resources/day09/numbers.txt");
+        final int PREAMBLE = 25; // don't forget to set 25!!!!!!!!!!!
+
+        ArrayList<Long> numbers = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
+                numbers.add(Long.parseLong(line));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+        int index = PREAMBLE;
+        boolean numberIsCorrect = true;
+        while (index < numbers.size() && numberIsCorrect) {
+            numberIsCorrect = false;
+            long number = numbers.get(index);
+            // checking if number is correct
+            int firstNumber = index - PREAMBLE;
+            while (firstNumber < index - 1) {
+                // needs another loop for second number
+                int secondNumber = firstNumber + 1;
+                while (secondNumber < index) {
+                    if (number == numbers.get(firstNumber) + numbers.get(secondNumber)) {
+                        numberIsCorrect = true;
+                        firstNumber = index;
+                        secondNumber = index;
+                    }
+                    secondNumber++;
+                }
+                firstNumber++;
+            }
+            index++;
+        }
+
+        System.out.println("wrong number is: " + numbers.get(index - 1));
+
     }
 }
