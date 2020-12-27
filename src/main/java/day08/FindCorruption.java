@@ -53,9 +53,13 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class FindCorruption {
+
+    private final static String ACCUMULATE = "acc";
+    private final static String JUMP = "jmp";
+    private final static String NO_OPERATION = "nop";
+
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day08/boot_code.txt");
-
 
         ArrayList<String> instructions = new ArrayList<>();
         ArrayList<Integer> arguments = new ArrayList<>();
@@ -70,29 +74,79 @@ public class FindCorruption {
             System.out.println(e.getMessage());
         }
 
-        // changing exactly one jmp (to nop) or nop (to jmp)
-        int size = instructions.size();
+        int accumulator = getAccumulator(instructions, arguments);
+        System.out.println("value accumulator: " + accumulator);
+    }
 
+    private static int getAccumulator(ArrayList<String> instructions, ArrayList<Integer> arguments) {
+        // changing exactly one jmp (to nop) or nop (to jmp)
         int accumulator = 0;
-        TreeSet<Integer> alreadyAddedSteps = new TreeSet<>();
-        int i = 0;
-        while (i < instructions.size()) {
-            if (alreadyAddedSteps.contains(i)) {
-                i = instructions.size();
+        int counter = 0;
+        int currentLine = 0;
+        boolean instructionIsChanged = false;
+        boolean jumpReachedEnd = false;
+        while (counter < instructions.size()) {
+            // change an instruction so that the program runs
+            if (!jumpReachedEnd) {
+                // change jmp to nop
+                if (instructionIsChanged) {
+                    instructions.set(currentLine, JUMP); // resetting original instruction
+                    currentLine++;
+                    instructionIsChanged = false;
+                }
+                while (!instructionIsChanged && !jumpReachedEnd) {
+                    if (instructions.get(currentLine).equals(JUMP)) {
+                        instructions.set(currentLine, NO_OPERATION);
+                        instructionIsChanged = true;
+                    } else {
+                        currentLine++;
+                        // resetting current line and go to change the next instruction
+                        if (currentLine == instructions.size()) {
+                            currentLine = 0;
+                            jumpReachedEnd = true;
+                        }
+                    }
+                }
             } else {
-                alreadyAddedSteps.add(i);
-                String instruction = instructions.get(i);
-                if (instruction.equals("acc")) {
-                    accumulator += arguments.get(i);
-                    i++;
-                } else if (instruction.equals("jmp")) {
-                    i += arguments.get(i);
-                } else if (instruction.equals("nop")) {
-                    i++;
+                // change nop to jmp
+                if (instructionIsChanged) {
+                    instructions.set(currentLine, NO_OPERATION); // resetting original instruction
+                    currentLine++;
+                    instructionIsChanged = false;
+                }
+                while (!instructionIsChanged) {
+                    if (instructions.get(currentLine).equals(NO_OPERATION)) {
+                        instructions.set(currentLine, JUMP);
+                        instructionIsChanged = true;
+                    } else {
+                        currentLine++;
+                    }
+                }
+            }
+
+            // running trough boot_code.txt
+            TreeSet<Integer> alreadyAddedSteps = new TreeSet<>();
+            boolean continueAccumulatorCounter = true;
+            while (counter < instructions.size() && continueAccumulatorCounter) {
+                if (alreadyAddedSteps.contains(counter)) {
+                    // breaking out of current while loop
+                    accumulator = 0;
+                    counter = 0;
+                    continueAccumulatorCounter = false;
+                } else {
+                    alreadyAddedSteps.add(counter);
+                    String instruction = instructions.get(counter);
+                    if (instruction.equals(ACCUMULATE)) {
+                        accumulator += arguments.get(counter);
+                        counter++;
+                    } else if (instruction.equals(JUMP)) {
+                        counter += arguments.get(counter);
+                    } else if (instruction.equals(NO_OPERATION)) {
+                        counter++;
+                    }
                 }
             }
         }
-
-        System.out.println("value accumulator: " + accumulator);
+        return accumulator;
     }
 }
