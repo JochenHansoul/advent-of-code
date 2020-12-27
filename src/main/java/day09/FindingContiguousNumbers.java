@@ -43,6 +43,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class FindingContiguousNumbers {
     public static void main(String[] args) {
@@ -62,9 +64,10 @@ public class FindingContiguousNumbers {
 
         int index = PREAMBLE;
         boolean numberIsCorrect = true;
+        long number = 0;
         while (index < numbers.size() && numberIsCorrect) {
+            number = numbers.get(index);
             numberIsCorrect = false;
-            long number = numbers.get(index);
             // checking if number is correct
             int firstNumber = index - PREAMBLE;
             while (firstNumber < index - 1) {
@@ -82,7 +85,31 @@ public class FindingContiguousNumbers {
             index++;
         }
 
-        System.out.println("wrong number is: " + numbers.get(index - 1));
+        System.out.println("wrong number is: " + number);
 
+        // finding contiguous list
+        ArrayList<Long> contiguousNumbers = new ArrayList<>();
+        int currentAmountOfNumbers = 2; // at least two numbers
+        boolean contiguousListIsFound = false;
+        while (!contiguousListIsFound) {
+            // running trough whole list with x amount of numbers
+            index = 0;
+            while (index < numbers.size() - currentAmountOfNumbers && !contiguousListIsFound) {
+                contiguousNumbers.clear();
+                long sumContiguousNumbers = 0;
+                for (int i = index; i < index + currentAmountOfNumbers; i++) {
+                    contiguousNumbers.add(numbers.get(i));
+                    sumContiguousNumbers += numbers.get(i);
+                }
+                if (number == sumContiguousNumbers) {
+                    contiguousListIsFound = true;
+                }
+                index++;
+            }
+            currentAmountOfNumbers++;
+        }
+
+        long sumSmallestAndHighestNumber = Collections.min(contiguousNumbers) + Collections.max(contiguousNumbers);
+        System.out.println("sum highest and lowest number: " + sumSmallestAndHighestNumber);
     }
 }
