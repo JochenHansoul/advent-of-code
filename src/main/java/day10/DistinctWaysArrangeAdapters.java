@@ -69,7 +69,7 @@ import java.util.Collections;
 
 public class DistinctWaysArrangeAdapters {
     public static void main(String[] args) {
-        final Path PATH = Paths.get("src/main/resources/day10/input.txt");
+        final Path PATH = Paths.get("src/main/resources/day10/example.txt");
 
         ArrayList<Integer> adapters = new ArrayList<>();
 
@@ -84,26 +84,36 @@ public class DistinctWaysArrangeAdapters {
 
         Collections.sort(adapters);
 
-        int distanceOne = 0;
-        int distanceTwo = 0;
-        int distanceTree = 0;
-
+        long possibleWays = 1;
         int joltage = 0;
-        for (int adapter : adapters) {
-            if (adapter == joltage + 1) {
-                distanceOne++;
-            } else if (adapter == joltage + 2) {
-                distanceTwo++;
+        int i = 0;
+        while (i < adapters.size()) {
+            // 3 (no other possibilities)
+            // 2 (no or one other possibilities)
+            // 1 (no, one or two other possibilities)
+            if (adapters.get(i) == joltage + 3
+            || adapters.get(i) == joltage + 2
+            && adapters.get(i + 1) > joltage + 3
+            || adapters.get(i) == joltage + 1
+            && adapters.get(i + 1) > joltage + 3) {
+                // first 3 or first 2 and  second 4 or first 1 and second 4 ==> no possibilities
+                i++;
+            } else if (adapters.get(i) == joltage + 2
+            || adapters.get(i) == joltage + 1
+            && adapters.get(i + 1) == joltage + 3) {
+                // first 2 and second 3 or first 1 and second 3 ==> two possibilities
+                possibleWays *= 2;
+                i += 2;
             } else {
-                distanceTree++;
+                // first 1 and second 2 and third 3 ==> four possibilities
+                possibleWays *= 4;
+                i += 3;
             }
-            joltage = adapter;
+            System.out.println(possibleWays);
+            joltage += 3;
         }
-        distanceTree++; // for laptop joltage difference
 
-        System.out.println(distanceTwo);
-
-        System.out.println(distanceOne * distanceTree);
-        // 2112 (correct)
+        System.out.println("amount of possible ways: " + possibleWays);
+        // 1125899906842624 (too high)
     }
 }
