@@ -97,5 +97,49 @@ differences multiplied by the number of 3-jolt differences?
 
 package day10;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class AdapterArray {
+    public static void main(String[] args) {
+        final Path PATH = Paths.get("src/main/resources/day10/input.txt");
+
+        ArrayList<Integer> adapters = new ArrayList<>();
+
+        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                adapters.add(Integer.parseInt(line));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        Collections.sort(adapters);
+
+        int distanceOne = 0;
+        int distanceTwo = 0;
+        int distanceTree = 0;
+
+        int currentJoltage = 0;
+        for (int adapter : adapters) {
+            if (adapter == currentJoltage + 1) {
+                distanceOne++;
+            } else if (adapter == currentJoltage + 2) {
+                distanceTwo++;
+            } else {
+                distanceTree++;
+            }
+            currentJoltage = adapter;
+        }
+        distanceTree++; // for laptop joltage difference
+
+        System.out.println(distanceOne * distanceTree);
+        // 2112 (correct)
+    }
 }
