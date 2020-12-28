@@ -61,6 +61,7 @@ package day10;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -83,37 +84,60 @@ public class DistinctWaysArrangeAdapters {
         }
 
         Collections.sort(adapters);
+        System.out.println(adapters);
 
         long possibleWays = 1;
+        BigInteger bigInteger = new BigInteger("1");
         int joltage = 0;
         int i = 0;
-        while (i < adapters.size()) {
-            // 3 (no other possibilities)
-            // 2 (no or one other possibilities)
-            // 1 (no, one or two other possibilities)
-            if (adapters.get(i) == joltage + 3
-            || adapters.get(i) == joltage + 2
-            && adapters.get(i + 1) > joltage + 3
-            || adapters.get(i) == joltage + 1
-            && adapters.get(i + 1) > joltage + 3) {
-                // first 3 or first 2 and  second 4 or first 1 and second 4 ==> no possibilities
-                i++;
-            } else if (adapters.get(i) == joltage + 2
-            || adapters.get(i) == joltage + 1
-            && adapters.get(i + 1) == joltage + 3) {
-                // first 2 and second 3 or first 1 and second 3 ==> two possibilities
-                possibleWays *= 2;
-                i += 2;
+        while (i < adapters.size() - 3) {
+            int firstAdapter = adapters.get(i);
+            int secondAdapter = adapters.get(i + 1);
+            int thirdAdapter = adapters.get(i + 2);
+
+            if (firstAdapter == joltage + 1) {
+                // first is +1
+                if (secondAdapter == joltage + 2) {
+                    if (thirdAdapter == joltage + 3) {
+                        possibleWays *= 4;
+                        bigInteger = bigInteger.multiply(new BigInteger("4"));
+                        joltage += 3;
+                        i += 3;
+                    } else {
+                        possibleWays *= 2;
+                        bigInteger = bigInteger.multiply(new BigInteger("2"));
+                        joltage += 2;
+                        i += 2;
+                    }
+                } else if (secondAdapter == joltage + 3) {
+                    possibleWays *= 2;
+                    bigInteger = bigInteger.multiply(new BigInteger("2"));
+                    joltage += 3;
+                    i++;
+                } else {
+                    joltage++;
+                    i++;
+                }
+            } else if (firstAdapter == joltage + 2) {
+                // first is +2
+                if (secondAdapter == 3) {
+                    possibleWays *= 2;
+                    bigInteger = bigInteger.multiply(new BigInteger("2"));
+                    joltage += 3;
+                    i += 2;
+                } else {
+                    joltage += 2;
+                    i++;
+                }
             } else {
-                // first 1 and second 2 and third 3 ==> four possibilities
-                possibleWays *= 4;
-                i += 3;
+                // first is +3
+                joltage += 3;
+                i++;
             }
-            System.out.println(possibleWays);
-            joltage += 3;
         }
 
         System.out.println("amount of possible ways: " + possibleWays);
+        System.out.println(bigInteger);
         // 1125899906842624 (too high)
     }
 }
