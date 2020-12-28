@@ -123,19 +123,17 @@ public class AdapterArray {
         Collections.sort(adapters);
 
         int distanceOne = 0;
-        int distanceTwo = 0;
+        //int distanceTwo = 0; // is always 0
         int distanceTree = 0;
 
-        int currentJoltage = 0;
+        int joltage = 0;
         for (int adapter : adapters) {
-            if (adapter == currentJoltage + 1) {
+            if (adapter == joltage + 1) {
                 distanceOne++;
-            } else if (adapter == currentJoltage + 2) {
-                distanceTwo++;
             } else {
                 distanceTree++;
             }
-            currentJoltage = adapter;
+            joltage = adapter;
         }
         distanceTree++; // for laptop joltage difference
 
