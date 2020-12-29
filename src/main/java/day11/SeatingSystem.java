@@ -109,35 +109,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 public class SeatingSystem {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day11/example.txt");
+        final char SEAT_EMPTY = 'L';
+        final char SEAT_OCCUPIED = '#';
 
-        char[][] seats = new char[returnTotalNumberOfLines(PATH)][];
-        fillSeats(PATH, seats);
+        ArrayList<char[]> seats = new ArrayList<>();
+        fillSeatsWithEmptyChairs(PATH, seats);
+        boolean[][] seatsToBeChanged = new boolean[seats.size()][seats.get(0).length];
 
-        for (char[] chars : seats) {
-            System.out.println(chars);
-        }
     }
 
-    private static int returnTotalNumberOfLines(Path path) {
-        int noOfLines = 0;
-        try (Stream<String> fileStream = Files.lines(path)) {
-            noOfLines = (int) fileStream.count();
-        } catch (IOException e) {
-            System.out.println( e.getMessage());
-        }
-        return noOfLines;
-    }
-
-    private static void fillSeats(Path path, char[][] seats) {
+    private static void fillSeatsWithEmptyChairs(Path path, ArrayList<char[]> seats) {
         try (BufferedReader reader = Files.newBufferedReader(path)) {
-            for (int i = 0; i < seats.length; i++) {
-                String line = reader.readLine();
-                seats[i] = line.toCharArray();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                seats.add(line.toCharArray());
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
