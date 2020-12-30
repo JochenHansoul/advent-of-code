@@ -47,5 +47,36 @@ starting position?
 
 package day12;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class RainRisk {
+    public static void main(String[] args) {
+        final Path PATH = Paths.get("src/main/resources/day12/example.txt");
+        final char NORTH = 'N';
+        final char SOUTH = 'S';
+        final char EAST = 'E';
+        final char WEST = 'W';
+        final char TURN_LEFT  = 'L';
+        final char TURN_RIGHT = 'R';
+        final char MOVE_FORWARD = 'F';
+
+        int horizontalDistance = 0;
+        int verticalDistance = 0;
+        CardinalDirections direction = CardinalDirections.EAST;
+
+        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                char action = line.substring(0, 1).toCharArray()[0];
+                System.out.println(action);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 }
