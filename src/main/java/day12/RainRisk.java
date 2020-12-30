@@ -54,29 +54,68 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RainRisk {
+    private final static char TURN_LEFT  = 'L';
+    private final static char TURN_RIGHT = 'R';
+
     public static void main(String[] args) {
-        final Path PATH = Paths.get("src/main/resources/day12/example.txt");
+        final Path PATH = Paths.get("src/main/resources/day12/input.txt");
         final char NORTH = 'N';
         final char SOUTH = 'S';
         final char EAST = 'E';
         final char WEST = 'W';
-        final char TURN_LEFT  = 'L';
-        final char TURN_RIGHT = 'R';
         final char MOVE_FORWARD = 'F';
 
         int horizontalDistance = 0;
         int verticalDistance = 0;
-        CardinalDirections direction = CardinalDirections.EAST;
+        CardinalDirections shipDirection = CardinalDirections.EAST;
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 char action = line.substring(0, 1).toCharArray()[0];
-                System.out.println(action);
+                int amount = Integer.parseInt(line.substring(1));
+                if (action == NORTH || action == MOVE_FORWARD && shipDirection == CardinalDirections.NORTH) {
+                    verticalDistance += amount;
+                } else if (action == EAST || action == MOVE_FORWARD && shipDirection == CardinalDirections.EAST) {
+                    horizontalDistance += amount;
+                } else if (action == SOUTH || action == MOVE_FORWARD && shipDirection == CardinalDirections.SOUTH) {
+                    verticalDistance -= amount;
+                } else if (action == WEST || action == MOVE_FORWARD && shipDirection == CardinalDirections.WEST) {
+                    horizontalDistance -= amount;
+                } else if (action == TURN_LEFT) {
+                    shipDirection = rotate(shipDirection, amount * -1);
+                } else {
+                    shipDirection = rotate(shipDirection, amount);
+                }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
+        horizontalDistance = Math.max(horizontalDistance, horizontalDistance * -1);
+        verticalDistance = Math.max(verticalDistance, verticalDistance * -1);
+        System.out.println("horizontal: " + horizontalDistance);
+        System.out.println("vertical: " + verticalDistance);
+        System.out.println("manhattan distance: " + (horizontalDistance + verticalDistance));
+    }
+
+    private static CardinalDirections rotate(CardinalDirections direction, int amount) {
+        int degrees = direction.getDegrees();
+        degrees += amount;
+        while (degrees > 270) {
+            degrees -= 360;
+        }
+        while (degrees < 0) {
+            degrees += 360;
+        }
+        if (degrees == 0) {
+            return CardinalDirections.NORTH;
+        } else if (degrees == 90) {
+            return CardinalDirections.EAST;
+        } else if (degrees == 180) {
+            return CardinalDirections.SOUTH;
+        } else {
+            return CardinalDirections.WEST;
+        }
     }
 }
