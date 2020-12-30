@@ -111,15 +111,83 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class SeatingSystem {
+    private static final char SEAT_EMPTY = 'L';
+    private static final char SEAT_OCCUPIED = '#';
+    private static final int CHAIRS_TAKEN_FOR_SEAT_TO_BECOMES_EMPTY = 4;
+
+    // arrays for getting all adjunct seats
+    private static final int[] allColumns = {-1, 0, 1, 1, 1, 0, -1, -1}; // hier had ik "1, 1" te veel gezet!!!
+    private static final int[] allRows = {1, 1, 1, 0, -1, -1, -1, 0};
+
     public static void main(String[] args) {
-        final Path PATH = Paths.get("src/main/resources/day11/example.txt");
-        final char SEAT_EMPTY = 'L';
-        final char SEAT_OCCUPIED = '#';
+        final Path PATH = Paths.get("src/main/resources/day11/input.txt");
 
         ArrayList<char[]> seats = new ArrayList<>();
         fillSeatsWithEmptyChairs(PATH, seats);
+        int seatsHorizontalSize = seats.get(0).length;
         boolean[][] seatsToBeChanged = new boolean[seats.size()][seats.get(0).length];
 
+        int amountOfSeatsChanged;
+        do {
+            amountOfSeatsChanged = 0;
+            for (int column = 0; column < seats.size(); column++) {
+                for (int row = 0; row < seatsHorizontalSize; row++) {
+                    char seat = seats.get(column)[row];
+                    if (seatNeedsToBeChanged(seats, seat, row, column)) {
+                        seatsToBeChanged[column][row] = true;
+                        amountOfSeatsChanged++;
+                    }
+                }
+            }
+            // changing seats
+            for (int column = 0; column < seats.size(); column++) {
+                for (int row = 0; row < seatsHorizontalSize; row++) {
+                    char seat = seats.get(column)[row];
+                    if (seatsToBeChanged[column][row]) {
+                        seats.get(column)[row] = (seat == SEAT_EMPTY) ? SEAT_OCCUPIED : SEAT_EMPTY;
+                        seatsToBeChanged[column][row] = false;
+                    }
+                }
+            }
+        } while (amountOfSeatsChanged > 0);
+
+        // counting occupied seats
+        int occupiedSeats = 0;
+        for (char[] chars : seats) {
+            for (int row = 0; row < seatsHorizontalSize; row++) {
+                char seat = chars[row];
+                if (seat == SEAT_OCCUPIED) {
+                    occupiedSeats++;
+                }
+            }
+        }
+        System.out.println("amount of occupied seats: " + occupiedSeats);
+        // 2344 (right)
+    }
+
+    private static boolean seatNeedsToBeChanged(ArrayList<char[]> seats, char seat, int row, int column) {
+        if (seat == SEAT_EMPTY) {
+            return getAmountOfAdjunctTakenChairs(seats, row, column) == 0;
+        } else if (seat == SEAT_OCCUPIED) {
+            return getAmountOfAdjunctTakenChairs(seats, row, column) >= CHAIRS_TAKEN_FOR_SEAT_TO_BECOMES_EMPTY;
+        } else {
+            return false; // neve changes when it's the floor
+        }
+    }
+
+    private static int getAmountOfAdjunctTakenChairs(ArrayList<char[]> seats, int row, int column) {
+        int amountOfTakenChairs = 0;
+        for (int i = 0; i < allColumns.length; i++) {
+            if (!placeIsInvalid(seats, row + allRows[i], column + allColumns[i])
+                    && seats.get(column + allColumns[i])[row + allRows[i]] == SEAT_OCCUPIED) {
+                amountOfTakenChairs++;
+            }
+        }
+        return amountOfTakenChairs;
+    }
+
+    private static boolean placeIsInvalid(ArrayList<char[]> seats, int row, int column) {
+        return  column < 0 || row < 0 || column > seats.size() - 1 || row > seats.get(0).length - 1;
     }
 
     private static void fillSeatsWithEmptyChairs(Path path, ArrayList<char[]> seats) {
