@@ -79,9 +79,10 @@ public class BinaryBoarding {
                 line = line.replaceAll("[" + UPPER_ROW_SYMBOL + UPPER_COLUMN_SYMBOL + "]", "1");
                 line = line.replaceAll("[" + LOWER_ROW_SYMBOL + LOWER_COLUMN_SYMBOL + "]", "0");
 
-                int row = Integer.parseInt(line.substring(0, ROWS_LOG2), 2);
+                /*int row = Integer.parseInt(line.substring(0, ROWS_LOG2), 2);
                 int column = Integer.parseInt(line.substring(ROWS_LOG2), 2);
-                ids.add(row * 8 + column);
+                ids.add(row * 8 + column);*/
+                ids.add(Integer.parseInt(line, 2)); // this does the same as the above lines
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
