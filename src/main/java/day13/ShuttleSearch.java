@@ -68,18 +68,49 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class ShuttleSearch {
     public static void main(String[] args) {
-        final Path PATH = Paths.get("src/main/resources/day12/input.txt");
+        final Path PATH = Paths.get("src/main/resources/day13/input.txt");
+
+        ArrayList<String> lines = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
-
+                lines.add(line);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+        int firstPossibleTime = Integer.parseInt(lines.get(0));
+        String[] idArray = lines.get(1).split(",");
+        ArrayList<Integer> ids = new ArrayList<>();
+        for (String s : idArray) {
+            if (!s.equals("x")) {
+                ids.add(Integer.parseInt(s));
+            }
+        }
+        System.out.println(ids);
+        int earliestBusId = 0;
+        boolean notFound = true;
+        int time = firstPossibleTime;
+        while (notFound) {
+            int i = 0;
+            while (i < ids.size() && notFound) {
+                notFound = time % ids.get(i) != 0;
+                earliestBusId = ids.get(i);
+                i++;
+            }
+            time++;
+        }
+        time--; // subtracting the last ++ from the while loop
+        int timeToWait = (time - firstPossibleTime);
+
+        System.out.println("bus id: " + earliestBusId);
+        System.out.println("id multiplied by time to wait: " + (timeToWait * earliestBusId));
+        // 2947 (correct)
     }
 }
