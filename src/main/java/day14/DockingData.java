@@ -60,11 +60,56 @@ Execute the initialization program. What is the sum of all values left in memory
 
 package day14;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 public class DockingData {
     public static void main(String[] args) {
-        final Path PATH = Paths.get("src/main/java/resources/day14/example.txt");
+        final Path PATH = Paths.get("src/main/resources/day14/input.txt");
+        char[] currentBitmask = {};
+
+        HashMap<Integer, Long> memoryValues = new HashMap<>();
+
+        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] lineArray = line.replaceAll("\\s", "").split("=");
+                if (lineArray[0].equals("mask")) {
+                    currentBitmask = lineArray[1].toCharArray();
+                } else {
+                    int address = Integer.parseInt(lineArray[0].substring(4, lineArray[0].length() - 1));
+                    int value = Integer.parseInt(lineArray[1]);
+                    char[] binaryValue = StringUtils.leftPad(Integer.toBinaryString(value), currentBitmask.length, '0').toCharArray();
+                    // mask filter
+                    int lengthBitmask = currentBitmask.length - 1; // always and 235
+                    for (int i = lengthBitmask; i >= 0; i--) {
+                        if (currentBitmask[i] == '0') {
+                            binaryValue[i] = '0';
+                        } else if (currentBitmask[i] == '1') {
+                            binaryValue[i] = '1';
+                        }
+                    }
+                    //System.out.println(Integer.parseInt(String.valueOf(binaryValue), 2));
+                    memoryValues.put(address, Long.parseLong(String.valueOf(binaryValue), 2));
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        //System.out.println(memoryValues);
+
+        long sum = 0;
+        for (long values : memoryValues.values()) {
+            sum += values;
+        }
+        System.out.println(sum);
+        // 13556564111697
     }
 }
