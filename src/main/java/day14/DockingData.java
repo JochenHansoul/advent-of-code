@@ -85,17 +85,14 @@ public class DockingData {
                 } else {
                     int address = Integer.parseInt(lineArray[0].substring(4, lineArray[0].length() - 1));
                     int value = Integer.parseInt(lineArray[1]);
-                    char[] binaryValue = StringUtils.leftPad(Integer.toBinaryString(value), currentBitmask.length, '0').toCharArray();
+                    char[] binaryValue = StringUtils.leftPad(Integer.toBinaryString(value), currentBitmask.length, '0')
+                            .toCharArray();
                     // mask filter
-                    int lengthBitmask = currentBitmask.length - 1; // always and 235
-                    for (int i = lengthBitmask; i >= 0; i--) {
-                        if (currentBitmask[i] == '0') {
-                            binaryValue[i] = '0';
-                        } else if (currentBitmask[i] == '1') {
-                            binaryValue[i] = '1';
-                        }
+                    for (int i = currentBitmask.length - 1; i >= 0; i--) {
+                        binaryValue[i] = (currentBitmask[i] == '0') ? '0'
+                                : (currentBitmask[i] == '1') ? '1'
+                                : binaryValue[i];
                     }
-                    //System.out.println(Integer.parseInt(String.valueOf(binaryValue), 2));
                     memoryValues.put(address, Long.parseLong(String.valueOf(binaryValue), 2));
                 }
             }
@@ -110,6 +107,6 @@ public class DockingData {
             sum += values;
         }
         System.out.println(sum);
-        // 13556564111697
+        // 13556564111697 (correct)
     }
 }
