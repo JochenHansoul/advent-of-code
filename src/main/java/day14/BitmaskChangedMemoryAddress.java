@@ -70,7 +70,7 @@ import java.util.HashMap;
 
 public class BitmaskChangedMemoryAddress {
     public static void main(String[] args) {
-        final Path PATH = Paths.get("src/main/resources/day14/example.txt");
+        final Path PATH = Paths.get("src/main/resources/day14/input.txt");
         final char FLOATING_SYMBOL = 'X';
         char[] currentBitmask = new char[0];
         ArrayList<Long> floatingValues = new ArrayList<>();
@@ -91,7 +91,6 @@ public class BitmaskChangedMemoryAddress {
                         }
                     }
                     Collections.sort(floatingValues);
-                    System.out.println(floatingValues);
                 } else {
                     // calculating new memory addresses and adding values to them
                     Long value = Long.parseLong(splitLine[1]);
@@ -100,6 +99,8 @@ public class BitmaskChangedMemoryAddress {
                             .leftPad(Integer.toBinaryString(address), currentBitmask.length, '0')
                             .toCharArray();
                     // mask filter
+                    System.out.println(currentBitmask);
+                    System.out.println(floatingValues);
                     for (int i = currentBitmask.length - 1; i >= 0; i--) {
                         binaryAddress[i] = (currentBitmask[i] == '0') ? binaryAddress[i]
                                 : (currentBitmask[i] == '1') ? '1'
@@ -108,7 +109,7 @@ public class BitmaskChangedMemoryAddress {
                     // getting all floating memory addresses
                     ArrayList<Long> initialValue = new ArrayList<>();
                     initialValue.add(Long.parseLong(String.valueOf(binaryAddress), 2));
-                    ArrayList<Long> floatingMemoryAddresses = getFloatingMemoryAddresses(initialValue, floatingValues);
+                    ArrayList<Long> floatingMemoryAddresses = getFloatingMemoryAddresses(initialValue, (ArrayList<Long>) floatingValues.clone());
                     // inserting values into memory addresses
                     for (long memoryAddress : floatingMemoryAddresses) {
                         memoryValues.put(memoryAddress, value);
@@ -125,9 +126,9 @@ public class BitmaskChangedMemoryAddress {
         }
         System.out.println(sum);
         // 625836681448 (wrong) too low. I couldn't run the example.txt file becouse it didn't fit on the heap
+        // 4173715962894 (right)
     }
 
-    private static int counter = 0;
 
     private static ArrayList<Long> getFloatingMemoryAddresses(ArrayList<Long> values, ArrayList<Long> floatingValues) {
         if (floatingValues.size() == 0) {
@@ -139,7 +140,6 @@ public class BitmaskChangedMemoryAddress {
                 newValues.add(value + floatingValues.get(0));
             }
             floatingValues.remove(0);
-            System.out.println(counter++ + "length: " + newValues.size());
             return getFloatingMemoryAddresses(newValues, floatingValues);
         }
     }
