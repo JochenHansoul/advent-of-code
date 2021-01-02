@@ -65,7 +65,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class BitmaskChangedMemoryAddress {
@@ -90,7 +89,6 @@ public class BitmaskChangedMemoryAddress {
                             floatingValues.add((long) Math.pow(2 , bitmask.length() - i - 1));
                         }
                     }
-                    Collections.sort(floatingValues);
                 } else {
                     // calculating new memory addresses and adding values to them
                     Long value = Long.parseLong(splitLine[1]);
@@ -99,8 +97,6 @@ public class BitmaskChangedMemoryAddress {
                             .leftPad(Integer.toBinaryString(address), currentBitmask.length, '0')
                             .toCharArray();
                     // mask filter
-                    System.out.println(currentBitmask);
-                    System.out.println(floatingValues);
                     for (int i = currentBitmask.length - 1; i >= 0; i--) {
                         binaryAddress[i] = (currentBitmask[i] == '0') ? binaryAddress[i]
                                 : (currentBitmask[i] == '1') ? '1'
@@ -125,7 +121,7 @@ public class BitmaskChangedMemoryAddress {
             sum += values;
         }
         System.out.println(sum);
-        // 625836681448 (wrong) too low. I couldn't run the example.txt file becouse it didn't fit on the heap
+        // 625836681448 (wrong) too low. I couldn't run the example.txt file because it didn't fit on the heap
         // 4173715962894 (right)
     }
 
