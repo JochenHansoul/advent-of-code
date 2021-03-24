@@ -45,7 +45,7 @@ public class BagApp2 {
         final String START_BAG = "shiny gold";
 
         HashSet<Bag> bags = new HashSet<>();
-        Bag startBag = new Bag(START_BAG);
+        Bag startBag = new Bag(Colors.SHINY, Patterns.GOLD);
         bags.add(startBag);
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {

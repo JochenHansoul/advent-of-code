@@ -4,15 +4,17 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Bag {
-    public final String COLOR;
+    public final Colors COLOR;
+    public final Patterns PATTERN;
     private HashMap<Bag, Integer> content;
 
-    public Bag(String color) {
-        this(color, null);
+    public Bag(Patterns pattern, Colors color) {
+        this(pattern, color, null);
     }
 
-    public Bag(String color, HashMap<Bag, Integer> bagContent) {
+    public Bag(Patterns pattern, Colors color, HashMap<Bag, Integer> bagContent) {
         this.COLOR = color;
+        this.PATTERN = pattern;
         this.content = bagContent;
     }
 
