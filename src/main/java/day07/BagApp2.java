@@ -42,10 +42,9 @@ import java.util.*;
 public class BagApp2 {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
-        final String START_BAG = "shiny gold";
 
         HashSet<Bag> bags = new HashSet<>();
-        Bag startBag = new Bag(Colors.SHINY, Patterns.GOLD);
+        Bag startBag = new Bag(Patterns.SHINY, Colors.GOLD);
         bags.add(startBag);
 
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
@@ -59,7 +58,9 @@ public class BagApp2 {
                     int counter = 4;
                     while (counter < lineParts.length) {
                         if ((lineParts[counter].equals("bags") || lineParts[counter].equals("bag"))) {
-                            Bag childBag = new Bag(lineParts[counter - 2] + " " + lineParts[counter - 1]);
+                            Bag childBag = new Bag(
+                                    Patterns.valueOf(lineParts[counter - 2].toUpperCase()),
+                                    Colors.valueOf(lineParts[counter - 1].toUpperCase()));
                             childBag = addBagToListOrGetAlreadyAddedBag(bags, childBag);
                             currentBagContent.put(childBag, Integer.parseInt(lineParts[counter - 3]));
                         }
@@ -67,7 +68,7 @@ public class BagApp2 {
                     }
                 }
                 // current bag
-                Bag currentBag = new Bag(lineParts[0] + " " + lineParts[1]);
+                Bag currentBag = new Bag(Patterns.valueOf(lineParts[0].toUpperCase()), Colors.valueOf(lineParts[1].toUpperCase()));
                 currentBag = addBagToListOrGetAlreadyAddedBag(bags, currentBag);
                 currentBag.setContent(currentBagContent);
             }
@@ -75,18 +76,18 @@ public class BagApp2 {
             System.out.println(e.getMessage());
         }
 
-        int amountOfBags = getAmountOfChildBags(startBag) - 1;
+        int amountOfBags = getAmountOfBags(startBag) - 1;
         System.out.println("amount of child bags: " + amountOfBags);
         // 801 (wrong) too low
         // 13265 (wrong) too high
         // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
     }
 
-    private static int getAmountOfChildBags(Bag bag) {
+    private static int getAmountOfBags(Bag bag) {
         HashMap<Bag, Integer> content = bag.getContent();
         int counter = 1;
         for (Bag child : content.keySet()) {
-            counter += content.get(child) * getAmountOfChildBags(child);
+            counter += content.get(child) * getAmountOfBags(child);
         }
         return counter;
     }
@@ -95,12 +96,14 @@ public class BagApp2 {
         if (bags.contains(bag)) {
             Bag[] arrayBags = bags.toArray(new Bag[0]);
             int i = 0;
-            while (i < arrayBags.length) {
-                if (arrayBags[i].COLOR.equals(bag.COLOR)) {
+            boolean found = false;
+            while (!found) {
+                if (arrayBags[i].equals(bag)) {
                     bag = arrayBags[i];
-                    i = arrayBags.length;
+                    found = true;
+                } else {
+                    i++;
                 }
-                i++;
             }
         } else {
             bags.add(bag);
