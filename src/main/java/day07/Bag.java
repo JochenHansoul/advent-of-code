@@ -30,15 +30,19 @@ public class Bag {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Bag bag = (Bag) o;
-        return Objects.equals(COLOR, bag.COLOR);
+        if (this == o) {
+            return true;
+        } else if (o == null || getClass() != o.getClass()) {
+            return false;
+        } else {
+            Bag bag = (Bag) o;
+            return COLOR == bag.COLOR && PATTERN == bag.PATTERN;
+        }
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(COLOR);
+        return Objects.hash(COLOR, PATTERN);
     }
 
     @Override
@@ -46,12 +50,15 @@ public class Bag {
         if (content != null && content.size() != 0) {
             StringBuilder sb = new StringBuilder();
             for (Bag bag : content.keySet()) {
-                sb.append(content.get(bag)).append(" ");
-                sb.append(bag.COLOR).append(", ");
+                sb
+                        .append(bag.PATTERN)
+                        .append(" ")
+                        .append(bag.COLOR)
+                        .append(", ");
             }
-            return String.format("%s {%s}", this.COLOR, sb.substring(0, sb.length() - 2));
+            return String.format("%s %s {%s}", this.PATTERN, this.COLOR, sb.substring(0, sb.length() - 2));
         } else {
-            return this.COLOR + " {}";
+            return String.format("%s %s {}", this.PATTERN, this.COLOR);
         }
     }
 }
