@@ -56,7 +56,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Part1 {
+public class YesNoQuestions1 {
     private static final TreeSet<Character> characterTreeSet = new TreeSet<>();
 
     private static int getAmountUniqueCharacters(StringBuilder sb) {

@@ -53,7 +53,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class Part2 {
+public class YesNoQuestions2 {
 
     private static ArrayList<Character> firstAnswer = new ArrayList<>();
 
