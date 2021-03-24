@@ -15,77 +15,43 @@ public class BagTest {
 
     @Before
     public void init() {
-        defaultBagsEmpty.put( new Bag("dark red"), 1);
-        defaultBagsEmpty.put(new Bag("dark blue"), 2);
-        defaultBagsEmpty.put(new Bag("dark green"), 3);
-        defaultBagsEmpty.put(new Bag("dark z"), 4);
-        defaultBagsEmpty.put(new Bag("dark grey"), 5);
+        defaultBagsEmpty.put( new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED")), 1);
+        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("BLUE")), 2);
+        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("GREEN")), 3);
+        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("YELLOW")), 4);
+        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("BLACK")), 5);
 
-        defaultBagsFull.put(new Bag("bright red", defaultBagsEmpty), 1);
-        defaultBagsFull.put(new Bag("bright blue", defaultBagsEmpty), 2);
+        defaultBagsFull.put(new Bag(Patterns.valueOf("BRIGHT"), Colors.valueOf("RED"), defaultBagsEmpty), 1);
+        defaultBagsFull.put(new Bag(Patterns.valueOf("BRIGHT"), Colors.valueOf("BLUE"), defaultBagsEmpty), 2);
     }
 
     @Test
-    public void testConstructorWithoutParameters() {
-        Bag bag = new Bag("dark red");
-        assertEquals("dark red", bag.COLOR);
+    public void testConstructor() {
+        Bag bag = new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED"));
+        assertEquals(Patterns.DARK, bag.PATTERN);
+        assertEquals(Colors.RED, bag.COLOR);
         assertNull(bag.getContent());
     }
 
     @Test
-    public void testConstructorWithParameters() {
-        Bag bag = new Bag("dark red");
-        assertEquals("dark red", bag.COLOR);
-    }
-
-    @Test
     public void testConstructorWithChildBags() {
-        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
-        assertEquals("dark black", darkBlackBag.COLOR);
-    }
-
-    @Test
-    public void testLengthBagContent() {
-        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
-        assertEquals(defaultBagsEmpty.size(), darkBlackBag.getContent().size()); // amount of bags are the same
-    }
-
-    @Test
-    public void testBagContentAmountsAreRight() {
-        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
-        HashMap<Bag, Integer> bagContent = darkBlackBag.getContent();
-        for (Bag bag : bagContent.keySet()) {
-            assertEquals(defaultBagsEmpty.get(bag), bagContent.get(bag)); // amount of certain bag are the same
-        }
-    }
-
-    @Test
-    public void testBagWithEmptyChildrenIsEmpty() {
-        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
-        for (Bag bag : darkBlackBag.getContent().keySet()) {
-            assertNull(bag.getContent());
-        }
-    }
-
-    @Test
-    public void testBagWithFilledChildrenAreFull() {
-        Bag darkBlackBag = new Bag("dark black", defaultBagsFull);
-        for (Bag bag : darkBlackBag.getContent().keySet()) {
-            assertNotNull(bag.getContent());
-        }
+        Bag bag = new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED"), defaultBagsEmpty);
+        assertEquals(Patterns.DARK, bag.PATTERN);
+        assertEquals(Colors.RED, bag.COLOR);
+        assertEquals(defaultBagsEmpty, bag.getContent());
     }
 
     @Test
     public void testSetContentBag() {
-        Bag darkBlackBag = new Bag("dark black");
-        darkBlackBag.setContent(defaultBagsEmpty);
-        assertEquals(defaultBagsEmpty, darkBlackBag.getContent());
+        Bag bag = new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED"));
+        bag.setContent(defaultBagsEmpty);
+        assertEquals(defaultBagsEmpty, bag.getContent());
     }
 
     @Test
     public void testSettingContentOfBagThatAlreadyHasContent() {
-        Bag darkBlackBag = new Bag("dark black", defaultBagsEmpty);
-        darkBlackBag.setContent(defaultBagsFull);
-        assertEquals(defaultBagsEmpty, darkBlackBag.getContent());
+        Bag bag = new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED"), defaultBagsEmpty);
+        bag.setContent(defaultBagsEmpty);
+        assertEquals(defaultBagsEmpty, bag.getContent());
     }
 }
