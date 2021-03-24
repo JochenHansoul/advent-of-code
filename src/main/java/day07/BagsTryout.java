@@ -11,11 +11,11 @@ public class BagsTryout {
 
         // adding bags with the same color doesn't increase the amount of bags
         HashMap<Bag, Integer> childBags = new HashMap<>();
-        childBags.put(new Bag("child dark red"), 10);
+        /*childBags.put(new Bag("child dark red"), 10);
         Bag darkRedBag = new Bag("dark red", childBags);
         bags.add(darkRedBag);
         bags.add(new Bag("dark green"));
-        bags.add(new Bag("dark blue")); // 3 bags added
+        bags.add(new Bag("dark blue"));*/ // 3 bags added
 
         // these 4 bags added are different to the bags that already have been added!!!
         /*HashMap<Bag, Integer> bagsHashMap1 = new HashMap<>();
@@ -25,7 +25,7 @@ public class BagsTryout {
         bags.add(new Bag("bright red", bagsHashMap1));*/
 
         // adding bags content to a bag that is alreasy added (doesn't work)
-        Bag alreadyAddedBag = new Bag("dark red");
+        /*Bag alreadyAddedBag = new Bag("dark red");
         if (bags.contains(alreadyAddedBag)) {
             alreadyAddedBag = getAlreadyAddedBag(bags, alreadyAddedBag);
         }
@@ -35,7 +35,7 @@ public class BagsTryout {
 
         // printing
         System.out.println("amount : " + bags.size());
-        printBagsAndChildren(bags);
+        printBagsAndChildren(bags);*/
     }
 
     private static Bag getAlreadyAddedBag(HashSet<Bag> bags, Bag alreadyAddedBag) {

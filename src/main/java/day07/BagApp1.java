@@ -46,8 +46,12 @@ import java.util.*;
 
 public class BagApp1 {
     public static void main(String[] args) {
+        final String BAG = "shiny gold";
+        final String[] BAG_ARRAY = BAG.toUpperCase().split(" ");
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
-        final String START_BAG = "shiny gold";
+
+        final Patterns PATTERN = Patterns.valueOf(BAG_ARRAY[0]);
+        final Colors COLOR = Colors.valueOf(BAG_ARRAY[1]);
 
         ArrayList<Bag> bagList = new ArrayList<>();
         ArrayList<String[]> arrayLines = new ArrayList<>();
@@ -58,7 +62,7 @@ public class BagApp1 {
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
                 String[] lineParts = line.split(" ");
-                bagList.add(new Bag(lineParts[0] + " " + lineParts[1]));
+                bagList.add(new Bag(Patterns.valueOf(lineParts[0].toUpperCase()), Colors.valueOf(lineParts[1].toUpperCase())));
                 arrayLines.add(lineParts);
             }
         } catch (IOException e) {
@@ -77,10 +81,11 @@ public class BagApp1 {
                 for (int j = 4; j < lineParts.length; j++) {
                     if ((lineParts[j].equals("bags") || lineParts[j].equals("bag"))) {
                         Bag childBag = null;
-                        String color = lineParts[j - 2] + " " + lineParts[j - 1];
+                        Patterns pattern = Patterns.valueOf(lineParts[j - 2].toUpperCase());
+                        Colors color = Colors.valueOf(lineParts[j - 1].toUpperCase());
                         int counter = 0;
                         while (counter < bagArray.length) {
-                            if (bagArray[counter].COLOR.equals(color)) {
+                            if (bagArray[counter].PATTERN.equals(pattern) && bagArray[counter].COLOR.equals(color)) {
                                 childBag = bagArray[counter];
                                 counter = bagArray.length;
                             }
@@ -91,7 +96,7 @@ public class BagApp1 {
                 }
             }
             bag.setContent(currentBagContent);
-            if (bag.COLOR.equals(START_BAG)) {
+            if (bag.PATTERN.equals(PATTERN) && bag.COLOR.equals(COLOR)) {
                 startBag = bag;
             }
         }
@@ -114,7 +119,7 @@ public class BagApp1 {
             parentBags = newParentBags;
         }
 
-        System.out.println("amount: " + rulesAppliedToSelectedBag.size()); // same as allAppliedBagallAppliedBags.size()s.size()
+        System.out.printf("%s bag can be contained by %s bags%n", BAG, rulesAppliedToSelectedBag.size()); // same as allAppliedBagallAppliedBags.size()s.size()
         // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
         // 301 (wrong) too high
         // 222 (correct)
