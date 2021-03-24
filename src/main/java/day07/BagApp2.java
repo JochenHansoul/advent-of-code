@@ -52,6 +52,13 @@ public class BagApp2 {
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
                 String[] lineParts = line.split(" ");
+
+                // current bag
+                Bag currentBag = new Bag(
+                        Patterns.valueOf(lineParts[0].toUpperCase()),
+                        Colors.valueOf(lineParts[1].toUpperCase()));
+                currentBag = addBagToListOrGetAlreadyAddedBag(bags, currentBag);
+
                 // current bag content
                 HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
                 if (!lineParts[4].equals("no")) {
@@ -67,9 +74,6 @@ public class BagApp2 {
                         counter++;
                     }
                 }
-                // current bag
-                Bag currentBag = new Bag(Patterns.valueOf(lineParts[0].toUpperCase()), Colors.valueOf(lineParts[1].toUpperCase()));
-                currentBag = addBagToListOrGetAlreadyAddedBag(bags, currentBag);
                 currentBag.setContent(currentBagContent);
             }
         } catch (IOException e) {
@@ -94,19 +98,24 @@ public class BagApp2 {
 
     private static Bag addBagToListOrGetAlreadyAddedBag(HashSet<Bag> bags, Bag bag) {
         if (bags.contains(bag)) {
-            Bag[] arrayBags = bags.toArray(new Bag[0]);
-            int i = 0;
-            boolean found = false;
-            while (!found) {
-                if (arrayBags[i].equals(bag)) {
-                    bag = arrayBags[i];
-                    found = true;
-                } else {
-                    i++;
-                }
-            }
+            bag = getOriginalBag(bags, bag);
         } else {
             bags.add(bag);
+        }
+        return bag;
+    }
+
+    private static Bag getOriginalBag(HashSet<Bag> bags, Bag bag) {
+        Bag[] arrayBags = bags.toArray(new Bag[0]);
+        int i = 0;
+        boolean found = false;
+        while (!found) {
+            if (arrayBags[i].equals(bag)) {
+                bag = arrayBags[i];
+                found = true;
+            } else {
+                i++;
+            }
         }
         return bag;
     }
