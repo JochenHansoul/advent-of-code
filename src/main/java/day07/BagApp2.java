@@ -68,9 +68,8 @@ public class BagApp2 {
             bags = new HashSet<>();
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parentAndChildren = line.split(" contain ");
+                String[] parentAndChildren = line.split(" bags contain ");
                 String[] parentBag = parentAndChildren[0]
-                        .substring(0, parentAndChildren[0].length() - 5)
                         .split(" ");
                 // current bag
                 Bag currentBag = new Bag(
@@ -83,7 +82,7 @@ public class BagApp2 {
                 } else {
                     HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
                     String[] childBags = parentAndChildren[1]
-                            .substring(0, parentAndChildren[1].length() - 2) // removing last "."
+                            .substring(0, parentAndChildren[1].length() - 1) // removing last "."
                             .replaceAll(" bag[s]", "")
                             .split(", ");
                     for (String childBagString : childBags) {
