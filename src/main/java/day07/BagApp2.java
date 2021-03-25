@@ -44,13 +44,28 @@ import java.util.*;
 public class BagApp2 {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
-
-        HashSet<Bag> bags = new HashSet<>();
-        Bag startBag = new Bag(Patterns.SHINY, Colors.GOLD);
-        bags.add(startBag);
+        final String bag = "shiny gold";
 
         Instant before = Instant.now();
-        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+        HashSet<Bag> bags = loadBags(PATH);
+        Instant after = Instant.now();
+        System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
+        // 180 - 220
+
+        String[] bagArray = bag.split(" ");
+        Bag startBag = addBagToListOrGetAlreadyAddedBag(
+                bags,
+                new Bag(Patterns.valueOf(bagArray[0].toUpperCase()), Colors.valueOf(bagArray[1].toUpperCase())));
+        System.out.printf("amount of child bags: %d", getAmountOfBags(startBag) - 1);
+        // 801 (wrong) too low
+        // 13265 (wrong) too high
+        // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
+    }
+
+    private static HashSet<Bag> loadBags(Path path) {
+        HashSet<Bag> bags = null;
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            bags = new HashSet<>();
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parentAndChildren = line.split(" contain ");
@@ -85,15 +100,7 @@ public class BagApp2 {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        Instant after = Instant.now();
-        System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
-        // 180 - 220
-
-        int amountOfBags = getAmountOfBags(startBag) - 1;
-        System.out.println("amount of child bags: " + amountOfBags);
-        // 801 (wrong) too low
-        // 13265 (wrong) too high
-        // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
+        return bags;
     }
 
     private static int getAmountOfBags(Bag bag) {
