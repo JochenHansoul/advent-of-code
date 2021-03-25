@@ -13,9 +13,13 @@ public class Bag {
     }
 
     public Bag(Patterns pattern, Colors color, HashMap<Bag, Integer> bagContent) {
-        this.COLOR = color;
-        this.PATTERN = pattern;
-        this.content = bagContent;
+        if (pattern != null && color != null) {
+            this.COLOR = color;
+            this.PATTERN = pattern;
+            this.content = bagContent;
+        } else {
+            throw new IllegalArgumentException("pattern and color may not be null");
+        }
     }
 
     public void setContent(HashMap<Bag, Integer> bagContent) {
@@ -36,7 +40,7 @@ public class Bag {
             return false;
         } else {
             Bag bag = (Bag) o;
-            return COLOR == bag.COLOR && PATTERN == bag.PATTERN;
+            return COLOR.equals(bag.COLOR) && PATTERN.equals(bag.PATTERN);
         }
     }
 
@@ -51,6 +55,8 @@ public class Bag {
             StringBuilder sb = new StringBuilder();
             for (Bag bag : content.keySet()) {
                 sb
+                        .append(content.get(bag))
+                        .append(" ")
                         .append(bag.PATTERN)
                         .append(" ")
                         .append(bag.COLOR)
