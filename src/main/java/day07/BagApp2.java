@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public class BagApp2 {
@@ -47,38 +49,45 @@ public class BagApp2 {
         Bag startBag = new Bag(Patterns.SHINY, Colors.GOLD);
         bags.add(startBag);
 
+        Instant before = Instant.now();
         try (BufferedReader reader = Files.newBufferedReader(PATH)) {
             String line;
             while ((line = reader.readLine()) != null) {
-                line = line.replaceAll("[.,]", "");
-                String[] lineParts = line.split(" ");
-
+                String[] parentAndChildren = line.split(" contain ");
+                String[] parentBag = parentAndChildren[0]
+                        .substring(0, parentAndChildren[0].length() - 5)
+                        .split(" ");
                 // current bag
                 Bag currentBag = new Bag(
-                        Patterns.valueOf(lineParts[0].toUpperCase()),
-                        Colors.valueOf(lineParts[1].toUpperCase()));
+                        Patterns.valueOf(parentBag[0].toUpperCase()),
+                        Colors.valueOf(parentBag[1].toUpperCase()));
                 currentBag = addBagToListOrGetAlreadyAddedBag(bags, currentBag);
-
-                // current bag content
-                HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
-                if (!lineParts[4].equals("no")) {
-                    int counter = 4;
-                    while (counter < lineParts.length) {
-                        if ((lineParts[counter].equals("bags") || lineParts[counter].equals("bag"))) {
-                            Bag childBag = new Bag(
-                                    Patterns.valueOf(lineParts[counter - 2].toUpperCase()),
-                                    Colors.valueOf(lineParts[counter - 1].toUpperCase()));
-                            childBag = addBagToListOrGetAlreadyAddedBag(bags, childBag);
-                            currentBagContent.put(childBag, Integer.parseInt(lineParts[counter - 3]));
-                        }
-                        counter++;
+                // child bags
+                if (parentAndChildren[1].equals("no other bags.")) {
+                    currentBag.setContent(new HashMap<>());
+                } else {
+                    HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
+                    String[] childBags = parentAndChildren[1]
+                            .substring(0, parentAndChildren[1].length() - 2) // removing last "."
+                            .replaceAll(" bag[s]", "")
+                            .split(", ");
+                    for (String childBagString : childBags) {
+                        String[] childBagArray = childBagString.split(" ");
+                        Bag childBag = new Bag(
+                                Patterns.valueOf(childBagArray[1].toUpperCase()),
+                                Colors.valueOf(childBagArray[2].toUpperCase()));
+                        childBag = addBagToListOrGetAlreadyAddedBag(bags, childBag);
+                        currentBagContent.put(childBag, Integer.parseInt(childBagArray[0]));
                     }
+                    currentBag.setContent(currentBagContent);
                 }
-                currentBag.setContent(currentBagContent);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        Instant after = Instant.now();
+        System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
+        // 180 - 220
 
         int amountOfBags = getAmountOfBags(startBag) - 1;
         System.out.println("amount of child bags: " + amountOfBags);
