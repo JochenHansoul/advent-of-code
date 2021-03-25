@@ -102,15 +102,6 @@ public class BagApp2 {
         return bags;
     }
 
-    private static int getAmountOfBags(Bag bag) {
-        HashMap<Bag, Integer> content = bag.getContent();
-        int counter = 1;
-        for (Bag child : content.keySet()) {
-            counter += content.get(child) * getAmountOfBags(child);
-        }
-        return counter;
-    }
-
     private static Bag addBagToListOrGetAlreadyAddedBag(HashSet<Bag> bags, Bag bag) {
         if (bags.contains(bag)) {
             bag = getOriginalBag(bags, bag);
@@ -133,5 +124,14 @@ public class BagApp2 {
             }
         }
         return bag;
+    }
+
+    private static int getAmountOfBags(Bag bag) {
+        HashMap<Bag, Integer> content = bag.getContent();
+        int counter = 1;
+        for (Bag child : content.keySet()) {
+            counter += content.get(child) * getAmountOfBags(child);
+        }
+        return counter;
     }
 }
