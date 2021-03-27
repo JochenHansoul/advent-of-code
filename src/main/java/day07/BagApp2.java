@@ -44,86 +44,27 @@ import java.util.*;
 public class BagApp2 {
     public static void main(String[] args) {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
-        final String bag = "shiny gold";
+        final String bagName = "shiny gold";
 
-        Instant before = Instant.now();
-        HashSet<Bag> bags = loadBags(PATH);
-        Instant after = Instant.now();
-        System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
-        // 180 - 220
+        try {
+            Instant before = Instant.now();
+            Bags bags = new Bags(PATH);
+            Instant after = Instant.now();
+            System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
+            // 180 - 220
 
-        String[] bagArray = bag.split(" ");
-        Bag startBag = addBagToListOrGetAlreadyAddedBag(
-                bags,
-                new Bag(Patterns.valueOf(bagArray[0].toUpperCase()), Colors.valueOf(bagArray[1].toUpperCase())));
-        System.out.printf("amount of child bags: %d", getAmountOfBags(startBag) - 1);
-        // 801 (wrong) too low
-        // 13265 (wrong) too high
-        // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
-    }
-
-    private static HashSet<Bag> loadBags(Path path) {
-        HashSet<Bag> bags = null;
-        try (BufferedReader reader = Files.newBufferedReader(path)) {
-            bags = new HashSet<>();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parentAndChildren = line.split(" bags contain ");
-                String[] parentBag = parentAndChildren[0]
-                        .split(" ");
-                // current bag
-                Bag currentBag = new Bag(
-                        Patterns.valueOf(parentBag[0].toUpperCase()),
-                        Colors.valueOf(parentBag[1].toUpperCase()));
-                currentBag = addBagToListOrGetAlreadyAddedBag(bags, currentBag);
-                // child bags
-                if (parentAndChildren[1].equals("no other bags.")) {
-                    currentBag.setContent(new HashMap<>());
-                } else {
-                    HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
-                    String[] childBags = parentAndChildren[1]
-                            .substring(0, parentAndChildren[1].length() - 1) // removing last "."
-                            .replaceAll(" bag[s]", "")
-                            .split(", ");
-                    for (String childBagString : childBags) {
-                        String[] childBagArray = childBagString.split(" ");
-                        Bag childBag = new Bag(
-                                Patterns.valueOf(childBagArray[1].toUpperCase()),
-                                Colors.valueOf(childBagArray[2].toUpperCase()));
-                        childBag = addBagToListOrGetAlreadyAddedBag(bags, childBag);
-                        currentBagContent.put(childBag, Integer.parseInt(childBagArray[0]));
-                    }
-                    currentBag.setContent(currentBagContent);
-                }
-            }
+            String[] bagArray = bagName.split(" ");
+            Bag bag = bags.getBag(
+                    Patterns.valueOf(bagArray[0].toUpperCase()),
+                    Colors.valueOf(bagArray[1].toUpperCase()));
+            System.out.printf("amount of child bags: %d%n", getAmountOfBags(bag) - 1);
+            System.out.println(bag.toString());
+            // 801 (wrong) too low
+            // 13265 (wrong) too high
+            // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        return bags;
-    }
-
-    private static Bag addBagToListOrGetAlreadyAddedBag(HashSet<Bag> bags, Bag bag) {
-        if (bags.contains(bag)) {
-            bag = getOriginalBag(bags, bag);
-        } else {
-            bags.add(bag);
-        }
-        return bag;
-    }
-
-    private static Bag getOriginalBag(HashSet<Bag> bags, Bag bag) {
-        Bag[] arrayBags = bags.toArray(new Bag[0]);
-        int i = 0;
-        boolean found = false;
-        while (!found) {
-            if (arrayBags[i].equals(bag)) {
-                bag = arrayBags[i];
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return bag;
     }
 
     private static int getAmountOfBags(Bag bag) {
