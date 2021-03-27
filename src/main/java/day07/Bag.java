@@ -51,10 +51,12 @@ public class Bag {
 
     @Override
     public String toString() {
-        return String.format("%s %s {%s}",
-                this.PATTERN.toString().toLowerCase(),
-                this.COLOR.toString().toLowerCase(),
-                contentToString());
+        return String.format("%s {%s}", nameToString(), contentToString());
+    }
+
+    public String nameToString() {
+        return String.format("%s %s", this.PATTERN, this.COLOR)
+                .toLowerCase();
     }
 
     public String contentToString() {
