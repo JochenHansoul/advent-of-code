@@ -57,22 +57,12 @@ public class BagApp2 {
             Bag bag = bags.getBag(
                     Patterns.valueOf(bagArray[0].toUpperCase()),
                     Colors.valueOf(bagArray[1].toUpperCase()));
-            System.out.printf("amount of child bags: %d%n", getAmountOfBags(bag) - 1);
-            System.out.println(bag.toString());
+            System.out.printf("%s bag contains %d bags%n", bag.nameToString(), bag.getAmountOfBags() - 1);
             // 801 (wrong) too low
             // 13265 (wrong) too high
             // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    private static int getAmountOfBags(Bag bag) {
-        HashMap<Bag, Integer> content = bag.getContent();
-        int counter = 1;
-        for (Bag child : content.keySet()) {
-            counter += content.get(child) * getAmountOfBags(child);
-        }
-        return counter;
     }
 }

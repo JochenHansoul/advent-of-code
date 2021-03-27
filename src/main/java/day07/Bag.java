@@ -49,6 +49,16 @@ public class Bag {
         return Objects.hash(COLOR, PATTERN);
     }
 
+    public int getAmountOfBags() {
+        int counter = 1;
+        if (content != null) {
+            for (Bag child : content.keySet()) {
+                counter += content.get(child) * child.getAmountOfBags();
+            }
+        }
+        return counter;
+    }
+
     @Override
     public String toString() {
         return String.format("%s {%s}", nameToString(), contentToString());
