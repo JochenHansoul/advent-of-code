@@ -51,6 +51,13 @@ public class Bag {
 
     @Override
     public String toString() {
+        return String.format("%s %s {%s}",
+                this.PATTERN.toString().toLowerCase(),
+                this.COLOR.toString().toLowerCase(),
+                contentToString());
+    }
+
+    public String contentToString() {
         if (content != null && content.size() != 0) {
             StringBuilder sb = new StringBuilder();
             for (Bag bag : content.keySet()) {
@@ -62,9 +69,9 @@ public class Bag {
                         .append(bag.COLOR)
                         .append(", ");
             }
-            return String.format("%s %s {%s}", this.PATTERN, this.COLOR, sb.substring(0, sb.length() - 2));
+            return sb.substring(0, sb.length() - 2).toLowerCase();
         } else {
-            return String.format("%s %s {}", this.PATTERN, this.COLOR);
+            return "";
         }
     }
 }
