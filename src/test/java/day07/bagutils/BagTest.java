@@ -1,5 +1,8 @@
-package day07;
+package day07.bagutils;
 
+import day07.bagutils.Bag;
+import day07.bagutils.Colors;
+import day07.bagutils.Patterns;
 import org.junit.Before;
 import org.junit.Test;
 

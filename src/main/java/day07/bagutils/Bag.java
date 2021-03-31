@@ -1,4 +1,4 @@
-package day07;
+package day07.bagutils;
 
 import java.util.HashMap;
 import java.util.Objects;

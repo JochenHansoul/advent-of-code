@@ -1,4 +1,4 @@
-package day07;
+package day07.bagutils;
 
 public enum Patterns {
     BRIGHT,

@@ -37,6 +37,10 @@ get all of it.)
 
 package day07;
 
+import day07.bagutils.Bag;
+import day07.bagutils.Colors;
+import day07.bagutils.Patterns;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;

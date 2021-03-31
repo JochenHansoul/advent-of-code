@@ -32,14 +32,16 @@ How many individual bags are required inside your single shiny gold bag?
 
 package day07;
 
-import java.io.BufferedReader;
+import day07.bagutils.Bag;
+import day07.bagutils.Bags;
+import day07.bagutils.Colors;
+import day07.bagutils.Patterns;
+
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
 
 public class BagApp2 {
     public static void main(String[] args) {
