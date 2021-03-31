@@ -38,8 +38,8 @@ get all of it.)
 package day07;
 
 import day07.bagutils.Bag;
-import day07.bagutils.Colors;
-import day07.bagutils.Patterns;
+import day07.bagutils.Color;
+import day07.bagutils.Pattern;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,8 +54,8 @@ public class BagApp1 {
         final String[] BAG_ARRAY = BAG.toUpperCase().split(" ");
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
 
-        final Patterns PATTERN = Patterns.valueOf(BAG_ARRAY[0]);
-        final Colors COLOR = Colors.valueOf(BAG_ARRAY[1]);
+        final Pattern PATTERN = Pattern.valueOf(BAG_ARRAY[0]);
+        final Color COLOR = Color.valueOf(BAG_ARRAY[1]);
 
         ArrayList<Bag> bagList = new ArrayList<>();
         ArrayList<String[]> arrayLines = new ArrayList<>();
@@ -66,7 +66,7 @@ public class BagApp1 {
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
                 String[] lineParts = line.split(" ");
-                bagList.add(new Bag(Patterns.valueOf(lineParts[0].toUpperCase()), Colors.valueOf(lineParts[1].toUpperCase())));
+                bagList.add(new Bag(Pattern.valueOf(lineParts[0].toUpperCase()), Color.valueOf(lineParts[1].toUpperCase())));
                 arrayLines.add(lineParts);
             }
         } catch (IOException e) {
@@ -85,8 +85,8 @@ public class BagApp1 {
                 for (int j = 4; j < lineParts.length; j++) {
                     if ((lineParts[j].equals("bags") || lineParts[j].equals("bag"))) {
                         Bag childBag = null;
-                        Patterns pattern = Patterns.valueOf(lineParts[j - 2].toUpperCase());
-                        Colors color = Colors.valueOf(lineParts[j - 1].toUpperCase());
+                        Pattern pattern = Pattern.valueOf(lineParts[j - 2].toUpperCase());
+                        Color color = Color.valueOf(lineParts[j - 1].toUpperCase());
                         int counter = 0;
                         while (counter < bagArray.length) {
                             if (bagArray[counter].PATTERN.equals(pattern) && bagArray[counter].COLOR.equals(color)) {

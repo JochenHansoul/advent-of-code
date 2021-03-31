@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Bag {
-    public final Colors COLOR;
-    public final Patterns PATTERN;
+    public final Color COLOR;
+    public final Pattern PATTERN;
     protected HashMap<Bag, Integer> content;
 
-    public Bag(Patterns pattern, Colors color) {
+    public Bag(Pattern pattern, Color color) {
         if (pattern != null && color != null) {
             this.COLOR = color;
             this.PATTERN = pattern;

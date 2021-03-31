@@ -20,8 +20,8 @@ public class Bags {
                         .split(" ");
                 // current bag
                 Bag currentBag = new Bag(
-                        Patterns.valueOf(parentBag[0].toUpperCase()),
-                        Colors.valueOf(parentBag[1].toUpperCase()));
+                        Pattern.valueOf(parentBag[0].toUpperCase()),
+                        Color.valueOf(parentBag[1].toUpperCase()));
                 currentBag = addBagToListOrGetOriginalBag(currentBag);
                 // child bags
                 if (!parentAndChildren[1].equals("no other bags.")) {
@@ -33,8 +33,8 @@ public class Bags {
                     for (String childBagString : childBags) {
                         String[] childBagArray = childBagString.split(" ");
                         Bag childBag = new Bag(
-                                Patterns.valueOf(childBagArray[1].toUpperCase()),
-                                Colors.valueOf(childBagArray[2].toUpperCase()));
+                                Pattern.valueOf(childBagArray[1].toUpperCase()),
+                                Color.valueOf(childBagArray[2].toUpperCase()));
                         childBag = addBagToListOrGetOriginalBag(childBag);
                         currentBag.content.put(childBag, Integer.parseInt(childBagArray[0]));
                     }
@@ -45,7 +45,7 @@ public class Bags {
         }
     }
 
-    public Bag getBag(Patterns pattern, Colors color) {
+    public Bag getBag(Pattern pattern, Color color) {
         return getOriginalBag(new Bag(pattern, color));
     }
 

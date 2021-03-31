@@ -1,6 +1,6 @@
 package day07.bagutils;
 
-public enum Colors {
+public enum Color {
     AQUA,
     BEIGE,
     BLACK,

@@ -54,8 +54,8 @@ public class BagApp2 {
 
             String[] bagArray = bagName.split(" ");
             Bag bag = bags.getBag(
-                    Patterns.valueOf(bagArray[0].toUpperCase()),
-                    Colors.valueOf(bagArray[1].toUpperCase()));
+                    Pattern.valueOf(bagArray[0].toUpperCase()),
+                    Color.valueOf(bagArray[1].toUpperCase()));
             System.out.printf("%s bag contains %d bags%n", bag.nameToString(), bag.getAmountOfBags() - 1);
             // 801 (wrong) too low
             // 13265 (wrong) too high

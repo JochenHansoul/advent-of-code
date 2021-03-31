@@ -1,6 +1,6 @@
 package day07.bagutils;
 
-public enum Patterns {
+public enum Pattern {
     BRIGHT,
     CLEAR,
     DARK,

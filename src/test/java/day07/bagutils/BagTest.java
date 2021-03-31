@@ -15,24 +15,24 @@ public class BagTest {
 
     @Before
     public void init() {
-        defaultBagsEmpty.put( new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED")), 1);
-        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("BLUE")), 2);
-        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("GREEN")), 3);
-        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("YELLOW")), 4);
-        defaultBagsEmpty.put(new Bag(Patterns.valueOf("DARK"), Colors.valueOf("BLACK")), 5);
+        defaultBagsEmpty.put( new Bag(Pattern.valueOf("DARK"), Color.valueOf("RED")), 1);
+        defaultBagsEmpty.put(new Bag(Pattern.valueOf("DARK"), Color.valueOf("BLUE")), 2);
+        defaultBagsEmpty.put(new Bag(Pattern.valueOf("DARK"), Color.valueOf("GREEN")), 3);
+        defaultBagsEmpty.put(new Bag(Pattern.valueOf("DARK"), Color.valueOf("YELLOW")), 4);
+        defaultBagsEmpty.put(new Bag(Pattern.valueOf("DARK"), Color.valueOf("BLACK")), 5);
     }
 
     @Test
     public void testConstructor() {
-        Bag bag = new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED"));
-        assertEquals(Patterns.DARK, bag.PATTERN);
-        assertEquals(Colors.RED, bag.COLOR);
+        Bag bag = new Bag(Pattern.valueOf("DARK"), Color.valueOf("RED"));
+        assertEquals(Pattern.DARK, bag.PATTERN);
+        assertEquals(Color.RED, bag.COLOR);
         assertNull(bag.getContent());
     }
 
     @Test
     public void testSetContentBag() {
-        Bag bag = new Bag(Patterns.valueOf("DARK"), Colors.valueOf("RED"));
+        Bag bag = new Bag(Pattern.valueOf("DARK"), Color.valueOf("RED"));
         bag.setContent(defaultBagsEmpty);
         assertEquals(defaultBagsEmpty, bag.getContent());
     }
