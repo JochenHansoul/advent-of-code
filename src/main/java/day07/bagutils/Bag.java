@@ -6,26 +6,20 @@ import java.util.Objects;
 public class Bag {
     public final Colors COLOR;
     public final Patterns PATTERN;
-    private HashMap<Bag, Integer> content;
+    protected HashMap<Bag, Integer> content;
 
     public Bag(Patterns pattern, Colors color) {
-        this(pattern, color, null);
-    }
-
-    public Bag(Patterns pattern, Colors color, HashMap<Bag, Integer> bagContent) {
         if (pattern != null && color != null) {
             this.COLOR = color;
             this.PATTERN = pattern;
-            this.content = bagContent;
+            this.content = new HashMap<>();
         } else {
             throw new IllegalArgumentException("pattern and color may not be null");
         }
     }
 
     public void setContent(HashMap<Bag, Integer> bagContent) {
-        if (this.content == null) {
-            this.content = bagContent;
-        }
+        this.content = bagContent;
     }
 
     public HashMap<Bag, Integer> getContent() {

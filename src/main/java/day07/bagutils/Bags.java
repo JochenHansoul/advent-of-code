@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Bags {
-    HashSet<Bag> bags = null;
+    HashSet<Bag> bags;
 
     public Bags(Path path) throws IOException {
         try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -24,9 +24,7 @@ public class Bags {
                         Colors.valueOf(parentBag[1].toUpperCase()));
                 currentBag = addBagToListOrGetOriginalBag(currentBag);
                 // child bags
-                if (parentAndChildren[1].equals("no other bags.")) {
-                    currentBag.setContent(new HashMap<>());
-                } else {
+                if (!parentAndChildren[1].equals("no other bags.")) {
                     HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
                     String[] childBags = parentAndChildren[1]
                             .substring(0, parentAndChildren[1].length() - 1) // removing last "."
@@ -38,9 +36,8 @@ public class Bags {
                                 Patterns.valueOf(childBagArray[1].toUpperCase()),
                                 Colors.valueOf(childBagArray[2].toUpperCase()));
                         childBag = addBagToListOrGetOriginalBag(childBag);
-                        currentBagContent.put(childBag, Integer.parseInt(childBagArray[0]));
+                        currentBag.content.put(childBag, Integer.parseInt(childBagArray[0]));
                     }
-                    currentBag.setContent(currentBagContent);
                 }
             }
         } catch (IOException e) {
