@@ -37,6 +37,7 @@ get all of it.)
 
 package day07;
 
+import day07.bagutils.BagNotFound;
 import day07.bagutils.Bags1;
 import day07.bagutils.Color;
 import day07.bagutils.Pattern;
@@ -67,7 +68,9 @@ public class BagApp1 {
             // 301 (wrong) too high
             // 222 (correct)
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("error loading bags: " + e.getMessage());
+        } catch (BagNotFound e) {
+            System.out.println("while generating bag rules we found: " + e.getMessage());
         }
     }
 }

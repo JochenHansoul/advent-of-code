@@ -12,7 +12,7 @@ import java.util.List;
 public class Bags1 {
     public final Bag[] BAGS;
 
-    public Bags1(Path path) throws IOException {
+    public Bags1(Path path) throws IOException, BagNotFound {
         List<int[]> amounts = new ArrayList<>();
         List<Pattern[]> patterns = new ArrayList<>();
         List<Color[]> colors = new ArrayList<>();
@@ -61,7 +61,7 @@ public class Bags1 {
         addChildContent(amounts, patterns, colors);
     }
 
-    public int amountOfBagsThatCanCarry(Pattern pattern, Color color) {
+    public int amountOfBagsThatCanCarry(Pattern pattern, Color color) throws BagNotFound {
         Bag startBag = getBag(pattern, color);
         HashSet<Bag> uniqueBags = new HashSet<>();
         HashSet<Bag> checkedBags = new HashSet<>();
@@ -82,7 +82,7 @@ public class Bags1 {
         return uniqueBags.size();
     }
 
-    private void addChildContent(List<int[]> amounts, List<Pattern[]> patterns, List<Color[]> colors) {
+    private void addChildContent(List<int[]> amounts, List<Pattern[]> patterns, List<Color[]> colors) throws BagNotFound {
         for (int i = 0; i < this.BAGS.length; i++) {
             HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
             for (int j = 0; j < amounts.get(i).length; j++) {
@@ -94,7 +94,7 @@ public class Bags1 {
         }
     }
 
-    private Bag getBag(Pattern pattern, Color color) {
+    private Bag getBag(Pattern pattern, Color color) throws BagNotFound {
         Bag bag = null;
         int counter = 0;
         boolean found = false;
@@ -106,6 +106,10 @@ public class Bags1 {
                 counter++;
             }
         }
-        return bag;
+        if (bag != null) {
+            return bag;
+        } else {
+            throw new BagNotFound(String.format("%s %s not found", pattern, color));
+        }
     }
 }
