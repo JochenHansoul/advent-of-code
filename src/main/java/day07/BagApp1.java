@@ -44,6 +44,8 @@ import day07.bagutils.Pattern;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 
 public class BagApp1 {
     public static void main(String[] args) {
@@ -51,7 +53,11 @@ public class BagApp1 {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
 
         try {
+            Instant before = Instant.now();
             Bags1 bags = new Bags1(PATH);
+            Instant after = Instant.now();
+            System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
+
             String[] patternAndColor = BAG.toUpperCase().split(" ");
             int amount = bags.amountOfBagsThatCanCarry(
                     Pattern.valueOf(patternAndColor[0]),
