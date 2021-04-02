@@ -90,7 +90,7 @@ public class Bags1 {
                         findBag(patterns.get(i)[j], colors.get(i)[j]),
                         amounts.get(i)[j]);
             }
-            this.BAGS[i].setContent(currentBagContent);
+            this.BAGS[i].content = currentBagContent;
         }
     }
 

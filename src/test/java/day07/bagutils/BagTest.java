@@ -29,11 +29,4 @@ public class BagTest {
         assertEquals(Color.RED, bag.COLOR);
         assertNull(bag.getContent());
     }
-
-    @Test
-    public void testSetContentBag() {
-        Bag bag = new Bag(Pattern.valueOf("DARK"), Color.valueOf("RED"));
-        bag.setContent(defaultBagsEmpty);
-        assertEquals(defaultBagsEmpty, bag.getContent());
-    }
 }

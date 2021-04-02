@@ -18,10 +18,6 @@ public class Bag {
         }
     }
 
-    public void setContent(HashMap<Bag, Integer> bagContent) {
-        this.content = bagContent;
-    }
-
     public HashMap<Bag, Integer> getContent() {
         return this.content;
     }
