@@ -41,6 +41,7 @@ import day07.bagutils.Bags1;
 import day07.bagutils.Color;
 import day07.bagutils.Pattern;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -49,14 +50,18 @@ public class BagApp1 {
         final String BAG = "shiny gold";
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
 
-        Bags1 bags = new Bags1(PATH);
-        String[] patternAndColor = BAG.toUpperCase().split(" ");
-        int amount = bags.amountOfBagsThatCanCarry(
-                Pattern.valueOf(patternAndColor[0]),
-                Color.valueOf(patternAndColor[1]));
-        System.out.printf("%s bag can be contained by %s bags", BAG, amount); // same as allAppliedBagallAppliedBags.size()s.size()
-        // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
-        // 301 (wrong) too high
-        // 222 (correct)
+        try {
+            Bags1 bags = new Bags1(PATH);
+            String[] patternAndColor = BAG.toUpperCase().split(" ");
+            int amount = bags.amountOfBagsThatCanCarry(
+                    Pattern.valueOf(patternAndColor[0]),
+                    Color.valueOf(patternAndColor[1]));
+            System.out.printf("%s bag can be contained by %s bags", BAG, amount); // same as allAppliedBagallAppliedBags.size()s.size()
+            // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
+            // 301 (wrong) too high
+            // 222 (correct)
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
