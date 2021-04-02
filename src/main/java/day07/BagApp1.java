@@ -42,9 +42,6 @@ import day07.bagutils.Bags1;
 import day07.bagutils.Color;
 import day07.bagutils.Pattern;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
