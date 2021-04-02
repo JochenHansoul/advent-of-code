@@ -131,8 +131,9 @@ public class BagApp1 {
                             if (bagArray[counter].PATTERN.equals(pattern) && bagArray[counter].COLOR.equals(color)) {
                                 childBag = bagArray[counter];
                                 counter = bagArray.length;
+                            } else {
+                                counter++;
                             }
-                            counter++;
                         }
                         currentBagContent.put(childBag, Integer.parseInt(lineParts[j - 3]));
                     }
