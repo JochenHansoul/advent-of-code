@@ -82,7 +82,10 @@ public class Bags1 {
         return uniqueBags.size();
     }
 
-    private void addChildContent(List<int[]> amounts, List<Pattern[]> patterns, List<Color[]> colors) throws BagNotFound {
+    private void addChildContent(
+            List<int[]> amounts,
+            List<Pattern[]> patterns,
+            List<Color[]> colors) throws BagNotFound {
         for (int i = 0; i < this.BAGS.length; i++) {
             HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
             for (int j = 0; j < amounts.get(i).length; j++) {
@@ -106,10 +109,10 @@ public class Bags1 {
                 counter++;
             }
         }
-        if (bag != null) {
+        if (found) {
             return bag;
         } else {
-            throw new BagNotFound(String.format("%s %s not found", pattern, color));
+            throw new BagNotFound(String.format("%s %s bag not found", pattern, color));
         }
     }
 }
