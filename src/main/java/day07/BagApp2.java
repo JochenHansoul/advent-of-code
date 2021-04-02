@@ -47,7 +47,7 @@ public class BagApp2 {
 
         try {
             Instant before = Instant.now();
-            Bags bags = new Bags(PATH);
+            Bags2 bags = new Bags2(PATH);
             Instant after = Instant.now();
             System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
             // 180 - 220

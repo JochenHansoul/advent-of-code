@@ -7,10 +7,10 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Bags {
+public class Bags2 {
     HashSet<Bag> bags;
 
-    public Bags(Path path) throws IOException {
+    public Bags2(Path path) throws IOException {
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             this.bags = new HashSet<>();
             String line;
