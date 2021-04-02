@@ -51,29 +51,68 @@ import java.util.*;
 public class BagApp1 {
     public static void main(String[] args) {
         final String BAG = "shiny gold";
-        final String[] BAG_ARRAY = BAG.toUpperCase().split(" ");
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
 
+        final String[] BAG_ARRAY = BAG.toUpperCase().split(" ");
         final Pattern PATTERN = Pattern.valueOf(BAG_ARRAY[0]);
         final Color COLOR = Color.valueOf(BAG_ARRAY[1]);
 
+
+        Bag[] bags = loadBags(PATH).toArray(new Bag[0]);
+        Bag startBag = null;
+        int counter = 0;
+        boolean found = false;
+        while (!found && counter < bags.length) {
+            if (bags[counter].PATTERN.equals(PATTERN) && bags[counter].COLOR.equals(COLOR)) {
+                startBag = bags[counter];
+                found = true;
+            } else {
+                counter++;
+            }
+        }
+
+        // getting all applied bag rules
+        HashSet<Bag> rulesAppliedToSelectedBag = new HashSet<>();
+        HashSet<Bag> parentBags = new HashSet<>();
+        parentBags.add(startBag);
+        while (parentBags.size() != 0) {
+            HashSet<Bag> newParentBags = new HashSet<>();
+            for (Bag bag : bags) {
+                for (Bag checkedBag : parentBags) {
+                    HashMap<Bag, Integer> content = bag.getContent();
+                    if (content.containsKey(checkedBag)) {
+                        newParentBags.add(bag);
+                        rulesAppliedToSelectedBag.add(bag);
+                    }
+                }
+            }
+            parentBags = newParentBags;
+        }
+
+        System.out.printf("%s bag can be contained by %s bags%n", BAG, rulesAppliedToSelectedBag.size()); // same as allAppliedBagallAppliedBags.size()s.size()
+        // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
+        // 301 (wrong) too high
+        // 222 (correct)
+    }
+
+    public static ArrayList<Bag> loadBags(Path path) {
         ArrayList<Bag> bagList = new ArrayList<>();
         ArrayList<String[]> arrayLines = new ArrayList<>();
 
         // adding bags to bag rules (but not yet content)
-        try (BufferedReader reader = Files.newBufferedReader(PATH)) {
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
                 String[] lineParts = line.split(" ");
-                bagList.add(new Bag(Pattern.valueOf(lineParts[0].toUpperCase()), Color.valueOf(lineParts[1].toUpperCase())));
+                bagList.add(new Bag(
+                        Pattern.valueOf(lineParts[0].toUpperCase()),
+                        Color.valueOf(lineParts[1].toUpperCase())));
                 arrayLines.add(lineParts);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
-        Bag startBag = null;
 
         // adding child content
         Bag[] bagArray = bagList.toArray(bagList.toArray(new Bag[0]));
@@ -100,32 +139,7 @@ public class BagApp1 {
                 }
             }
             bag.setContent(currentBagContent);
-            if (bag.PATTERN.equals(PATTERN) && bag.COLOR.equals(COLOR)) {
-                startBag = bag;
-            }
         }
-
-        // getting all applied bag rules
-        HashSet<Bag> rulesAppliedToSelectedBag = new HashSet<>();
-        HashSet<Bag> parentBags = new HashSet<>();
-        parentBags.add(startBag);
-        while (parentBags.size() != 0) {
-            HashSet<Bag> newParentBags = new HashSet<>();
-            for (Bag bag : bagArray) {
-                for (Bag checkedBag : parentBags) {
-                    HashMap<Bag, Integer> content = bag.getContent();
-                    if (content.containsKey(checkedBag)) {
-                        newParentBags.add(bag);
-                        rulesAppliedToSelectedBag.add(bag);
-                    }
-                }
-            }
-            parentBags = newParentBags;
-        }
-
-        System.out.printf("%s bag can be contained by %s bags%n", BAG, rulesAppliedToSelectedBag.size()); // same as allAppliedBagallAppliedBags.size()s.size()
-        // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
-        // 301 (wrong) too high
-        // 222 (correct)
+        return bagList;
     }
 }
