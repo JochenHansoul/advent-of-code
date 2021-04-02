@@ -11,12 +11,11 @@ import java.util.HashSet;
 public class Bags1 {
     public final Bag[] BAGS;
 
-    public Bags1(Path path) {
+    public Bags1(Path path) throws IOException {
         ArrayList<Bag> bagList = new ArrayList<>();
-        ArrayList<String[]> arrayLines = new ArrayList<>();
-
-        // adding bags to bag rules (but not yet content)
         try (BufferedReader reader = Files.newBufferedReader(path)) {
+            // adding bags to bag rule list
+            ArrayList<String[]> arrayLines = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.replaceAll("[.,]", "");
@@ -26,36 +25,36 @@ public class Bags1 {
                         Color.valueOf(lineParts[1].toUpperCase())));
                 arrayLines.add(lineParts);
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
 
-        // adding child content
-        Bag[] bagArray = bagList.toArray(bagList.toArray(new Bag[0]));
-        for (int i = 0; i < bagList.size(); i++) {
-            Bag bag = bagArray[i];
-            String[] lineParts = arrayLines.get(i);
-            HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
-            if (!lineParts[4].equals("no")) {
-                for (int j = 4; j < lineParts.length; j++) {
-                    if ((lineParts[j].equals("bags") || lineParts[j].equals("bag"))) {
-                        Bag childBag = null;
-                        Pattern pattern = Pattern.valueOf(lineParts[j - 2].toUpperCase());
-                        Color color = Color.valueOf(lineParts[j - 1].toUpperCase());
-                        int counter = 0;
-                        while (counter < bagArray.length) {
-                            if (bagArray[counter].PATTERN.equals(pattern) && bagArray[counter].COLOR.equals(color)) {
-                                childBag = bagArray[counter];
-                                counter = bagArray.length;
-                            } else {
-                                counter++;
+            // adding child content to the bags
+            Bag[] bagArray = bagList.toArray(bagList.toArray(new Bag[0]));
+            for (int i = 0; i < bagList.size(); i++) {
+                Bag bag = bagArray[i];
+                String[] lineParts = arrayLines.get(i);
+                HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
+                if (!lineParts[4].equals("no")) {
+                    for (int j = 4; j < lineParts.length; j++) {
+                        if ((lineParts[j].equals("bags") || lineParts[j].equals("bag"))) {
+                            Bag childBag = null;
+                            Pattern pattern = Pattern.valueOf(lineParts[j - 2].toUpperCase());
+                            Color color = Color.valueOf(lineParts[j - 1].toUpperCase());
+                            int counter = 0;
+                            while (counter < bagArray.length) {
+                                if (bagArray[counter].PATTERN.equals(pattern) && bagArray[counter].COLOR.equals(color)) {
+                                    childBag = bagArray[counter];
+                                    counter = bagArray.length;
+                                } else {
+                                    counter++;
+                                }
                             }
+                            currentBagContent.put(childBag, Integer.parseInt(lineParts[j - 3]));
                         }
-                        currentBagContent.put(childBag, Integer.parseInt(lineParts[j - 3]));
                     }
                 }
+                bag.setContent(currentBagContent);
             }
-            bag.setContent(currentBagContent);
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
         }
         this.BAGS = bagList.toArray(new Bag[0]);
     }
