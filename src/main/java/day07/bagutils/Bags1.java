@@ -62,7 +62,7 @@ public class Bags1 {
     }
 
     public int amountOfBagsThatCanCarry(Pattern pattern, Color color) {
-        Bag startBag = findBag(pattern, color);
+        Bag startBag = getBag(pattern, color);
         HashSet<Bag> uniqueBags = new HashSet<>();
         HashSet<Bag> checkedBags = new HashSet<>();
         checkedBags.add(startBag);
@@ -87,14 +87,14 @@ public class Bags1 {
             HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
             for (int j = 0; j < amounts.get(i).length; j++) {
                 currentBagContent.put(
-                        findBag(patterns.get(i)[j], colors.get(i)[j]),
+                        getBag(patterns.get(i)[j], colors.get(i)[j]),
                         amounts.get(i)[j]);
             }
             this.BAGS[i].content = currentBagContent;
         }
     }
 
-    private Bag findBag(Pattern pattern, Color color) {
+    private Bag getBag(Pattern pattern, Color color) {
         Bag bag = null;
         int counter = 0;
         boolean found = false;
@@ -108,5 +108,4 @@ public class Bags1 {
         }
         return bag;
     }
-
 }
