@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Bags1 {
     public final Bag[] BAGS;
@@ -59,7 +60,7 @@ public class Bags1 {
         this.BAGS = bagList.toArray(new Bag[0]);
     }
 
-    public Bag getBag(Pattern pattern, Color color) {
+    private Bag getBag(Pattern pattern, Color color) {
         Bag bag = null;
         int counter = 0;
         boolean found = false;
@@ -72,5 +73,26 @@ public class Bags1 {
             }
         }
         return bag;
+    }
+
+    public int amountOfBagsThatCanCarry(Pattern pattern, Color color) {
+        Bag startBag = getBag(pattern, color);
+        HashSet<Bag> uniqueBags = new HashSet<>();
+        HashSet<Bag> checkedBags = new HashSet<>();
+        checkedBags.add(startBag);
+        do {
+            HashSet<Bag> nextCheckedBags = new HashSet<>();
+            for (Bag bag : this.BAGS) {
+                for (Bag checkedBag : checkedBags) {
+                    HashMap<Bag, Integer> content = bag.getContent();
+                    if (content.containsKey(checkedBag)) {
+                        nextCheckedBags.add(bag);
+                        uniqueBags.add(bag);
+                    }
+                }
+            }
+            checkedBags = nextCheckedBags;
+        } while (checkedBags.size() != 0);
+        return uniqueBags.size();
     }
 }
