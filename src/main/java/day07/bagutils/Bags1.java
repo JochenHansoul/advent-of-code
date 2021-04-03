@@ -62,12 +62,11 @@ public class Bags1 {
     }
 
     public int amountOfBagsThatCanCarry(Pattern pattern, Color color) throws BagNotFound {
-        Bag startBag = getBag(pattern, color);
         HashSet<Bag> uniqueBags = new HashSet<>();
         HashSet<Bag> checkedBags = new HashSet<>();
-        checkedBags.add(startBag);
+        HashSet<Bag> nextCheckedBags = new HashSet<>();
+        checkedBags.add(getBag(pattern, color));
         do {
-            HashSet<Bag> nextCheckedBags = new HashSet<>();
             for (Bag bag : this.BAGS) {
                 for (Bag checkedBag : checkedBags) {
                     HashMap<Bag, Integer> content = bag.getContent();
@@ -77,7 +76,9 @@ public class Bags1 {
                     }
                 }
             }
-            checkedBags = nextCheckedBags;
+            checkedBags.clear();
+            checkedBags.addAll(nextCheckedBags);
+            nextCheckedBags.clear();
         } while (checkedBags.size() != 0);
         return uniqueBags.size();
     }
