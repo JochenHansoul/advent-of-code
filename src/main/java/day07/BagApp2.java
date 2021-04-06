@@ -41,27 +41,23 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class BagApp2 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
         final String bagName = "shiny gold";
 
-        try {
-            Instant before = Instant.now();
-            Bags2 bags = new Bags2(PATH);
-            Instant after = Instant.now();
-            System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
-            // 180 - 220
+        Instant before = Instant.now();
+        Bags2 bags = new Bags2(PATH);
+        Instant after = Instant.now();
+        System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
+        // 180 - 220
 
-            String[] bagArray = bagName.split(" ");
-            Bag bag = bags.getBag(
-                    Pattern.valueOf(bagArray[0].toUpperCase()),
-                    Color.valueOf(bagArray[1].toUpperCase()));
-            System.out.printf("%s bag contains %d bags%n", bag.nameToString(), bag.getAmountOfBags() - 1);
-            // 801 (wrong) too low
-            // 13265 (wrong) too high
-            // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        String[] bagArray = bagName.split(" ");
+        Bag bag = bags.getBag(
+                Pattern.valueOf(bagArray[0].toUpperCase()),
+                Color.valueOf(bagArray[1].toUpperCase()));
+        System.out.printf("%s bag contains %d bags%n", bag.nameToString(), bag.getAmountOfBags() - 1);
+        // 801 (wrong) too low
+        // 13265 (wrong) too high
+        // 13264 (right) I forgot to subtract the original bag of the answer! only the bags inside had to be counted
     }
 }

@@ -49,16 +49,16 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class BagApp1 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, BagNotFound {
         final String BAG = "shiny gold";
         final Path PATH = Paths.get("src/main/resources/day07/bag_rules.txt");
 
-        try {
-            Instant before = Instant.now();
-            Bags1 bags = new Bags1(PATH);
-            Instant after = Instant.now();
-            System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
+        Instant before = Instant.now();
+        Bags1 bags = new Bags1(PATH);
+        Instant after = Instant.now();
+        System.out.printf("Duration milliseconds: %.3s%n", Duration.between(before, after).getNano());
 
+        try {
             String[] patternAndColor = BAG.toUpperCase().split(" ");
             int amount = bags.amountOfBagsThatCanCarry(
                     Pattern.valueOf(patternAndColor[0]),
@@ -67,10 +67,8 @@ public class BagApp1 {
             // 594 (wrong) too high. Per ongeluk valueVags.size() gebruikt i.p.v currentAppliedBags.size()
             // 301 (wrong) too high
             // 222 (correct)
-        } catch (IOException e) {
-            System.out.println("error loading bags: " + e.getMessage());
         } catch (BagNotFound e) {
-            System.out.println("while generating bag rules we found: " + e.getMessage());
+            System.out.println("The specified bag could not be found: " + e.getMessage());
         }
     }
 }
