@@ -19,10 +19,9 @@ public class Bags2 {
                 String[] parentBag = parentAndChildren[0]
                         .split(" ");
                 // current bag
-                Bag currentBag = new Bag(
+                Bag currentBag = getOriginalBagOrCreateAndAddNewBag(
                         Pattern.valueOf(parentBag[0].toUpperCase()),
                         Color.valueOf(parentBag[1].toUpperCase()));
-                currentBag = addBagToListOrGetOriginalBag(currentBag);
                 // child bags
                 if (!parentAndChildren[1].equals("no other bags.")) {
                     HashMap<Bag, Integer> currentBagContent = new HashMap<>(); // don't forget to create a new object!
@@ -32,10 +31,9 @@ public class Bags2 {
                             .split(", ");
                     for (String childBagString : childBags) {
                         String[] childBagArray = childBagString.split(" ");
-                        Bag childBag = new Bag(
+                        Bag childBag = getOriginalBagOrCreateAndAddNewBag(
                                 Pattern.valueOf(childBagArray[1].toUpperCase()),
                                 Color.valueOf(childBagArray[2].toUpperCase()));
-                        childBag = addBagToListOrGetOriginalBag(childBag);
                         currentBag.content.put(childBag, Integer.parseInt(childBagArray[0]));
                     }
                 }
@@ -49,7 +47,8 @@ public class Bags2 {
         return getOriginalBag(new Bag(pattern, color));
     }
 
-    private Bag addBagToListOrGetOriginalBag(Bag bag) {
+    private Bag getOriginalBagOrCreateAndAddNewBag(Pattern pattern, Color color) {
+        Bag bag = new Bag(pattern, color);
         if (this.bags.contains(bag)) {
             bag = getOriginalBag(bag);
         } else {
