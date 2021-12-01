@@ -1,22 +1,16 @@
 "use strict";
 
-const fs = require("fs")
-const path = "../../resources/day01/input.txt"
+const fs = require("fs");
+const path = "../../resources/day01/input.txt";
 
-fs.readFile(path, (err, data) => {
-    if (err === null) {
-        let array = data.toString().split("\n");
-        let counter = 0;
-        let previousNumber = parseInt(array.shift());
-        for (let s of array) {
-            let n = parseInt(s);
-            if (previousNumber < n) {
-                counter++;
-            }
-            previousNumber = n;
-        }
-        console.log(counter);
-    } else {
-        throw err;
+let lines = fs.readFileSync(path,"utf8").split("\n");
+let counter = 0;
+let previousNumber = parseInt(lines.shift());
+for (let line of lines) {
+    let n = parseInt(line);
+    if (previousNumber < n) {
+        counter++;
     }
-})
+    previousNumber = n;
+}
+console.log(counter);
