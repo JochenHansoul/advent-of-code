@@ -15,9 +15,8 @@ const increasedAmount = numbers => {
     return counter;
 };
 
-let lines = fs.readFileSync(path,"utf8").split("\n");
-let numbers = lines.map(function (x) { 
-    return parseInt(x, 10); 
-});
+let numbers = fs.readFileSync(path,"utf8")
+    .split("\n")
+    .map((x) => parseInt(x, 10));
 
 console.log(increasedAmount(numbers));
