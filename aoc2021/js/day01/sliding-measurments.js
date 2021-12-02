@@ -2,7 +2,6 @@
 
 const fs = require("fs");
 const path = "../../resources/day01/input.txt";
-//const path = "../../resources/day01/example.txt";
 
 const increasedAmount = numbers => {
     let counter = 0;
@@ -31,6 +30,7 @@ const slidingWindow = (numbers, amount = 2) => {
 let numbers = fs.readFileSync(path,"utf8")
     .split("\n")
     .map((x) => parseInt(x, 10));
+numbers.pop();
 
 numbers = slidingWindow(numbers, 3);
 console.log(increasedAmount(numbers));

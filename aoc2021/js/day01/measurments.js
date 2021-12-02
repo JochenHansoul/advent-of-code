@@ -18,5 +18,6 @@ const increasedAmount = numbers => {
 let numbers = fs.readFileSync(path,"utf8")
     .split("\n")
     .map((x) => parseInt(x, 10));
+numbers.pop();
 
 console.log(increasedAmount(numbers));
