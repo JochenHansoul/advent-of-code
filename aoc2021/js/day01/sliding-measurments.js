@@ -16,10 +16,14 @@ const increasedAmount = numbers => {
     return counter;
 };
 
-const slidingWindow = numbers => {
+const slidingWindow = (numbers, amount = 2) => {
     let result = [];
-    for (let i = 0; i < numbers.length - 2; i++) {
-        result.push(numbers[i] + numbers[i + 1] + numbers[i + 2]);
+    for (let i = 0; i < numbers.length - (amount - 1); i++) {
+        let sum = 0;
+        for (let j = 0; j < amount; j++) {
+            sum += numbers[i + j];
+        }
+        result.push(sum);
     }
     return result;
 };
@@ -28,6 +32,5 @@ let numbers = fs.readFileSync(path,"utf8")
     .split("\n")
     .map((x) => parseInt(x, 10));
 
-let slidingNumbers = slidingWindow(numbers);
-let result = increasedAmount(slidingNumbers)
-console.log(result);
+numbers = slidingWindow(numbers, 3);
+console.log(increasedAmount(numbers));
