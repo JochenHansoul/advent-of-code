@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const path = "../../resources/day04/example.txt";
+const path = "../../resources/day04/input.txt";
 
 const readFile = (fs, path) => {
     return fs.readFileSync(path, "utf8")
@@ -99,7 +99,7 @@ const verifyBoolBingo = boolBingo => {
 * numbers array of winning numbers
 * result: an array of the winning bingo and the winning numbers
 */
-const getWinningBingo = (bingos, numbers) => {
+const getLastWinningBingo = (bingos, numbers) => {
     numbers = numbers.slice();
     const boolArrays = getBoolArrays(bingos.length, bingos[0].length, bingos[0][0].length);
     for (let i = 0; i < 4; i++) {
@@ -108,20 +108,23 @@ const getWinningBingo = (bingos, numbers) => {
         }
         numbers.shift();
     }
-    let won = false;
+    let lastBingo;
+    let lastBingoBool;
     let winningNumber;
-    let counter;
-    while (!won) {
-        counter = 0;
-        while (!won && counter < bingos.length) {
+    while (bingos.length !== 0) {
+        let counter = 0;
+        while (counter < bingos.length) {
             setBingo(bingos[counter], boolArrays[counter], numbers[0]);
-            won = verifyBoolBingo(boolArrays[counter]);
+            if (verifyBoolBingo(boolArrays[counter])) {
+                lastBingo = bingos.splice(counter, 1)[0];
+                lastBingoBool = boolArrays.splice(counter, 1)[0];
+                counter--;
+            }
             counter++;
         }
         winningNumber = numbers.shift();
     }
-    counter--; // to counter the last counter++
-    return [bingos[counter], boolArrays[counter], winningNumber];
+    return [lastBingo, lastBingoBool, winningNumber];
 };
 
 const getBingoScore = (bingo, boolMatrix, winningNumber) => {
@@ -137,11 +140,13 @@ const getBingoScore = (bingo, boolMatrix, winningNumber) => {
 };
 
 let lines = readFile(fs, path);
-let numbers = lines.shift()
-    .split(",")
+let numbers = lines.shift().split(",")
     .map((x) => parseInt(x, 10));
 lines.shift();
 
 let bingos = getBingos(lines, 5);
-let win = getWinningBingo(bingos, numbers);
-console.log(getBingoScore(win[0], win[1], win[2]));
+let last = getLastWinningBingo(bingos, numbers);
+/*console.log(last[0]);
+console.log(last[1]);
+console.log(last[2]);*/
+console.log(getBingoScore(last[0], last[1], last[2]));
