@@ -10,27 +10,36 @@ const readFile = (fs, path) => {
     return instructions;
 };
 
-// input is a binary string
-const getMostCommonBit = binaryStrings => {
-    let numbers = new Array(binaryStrings[0].length).fill(0);
-    for (let binary of binaryStrings) {
-        for (let i = 0; i < binary.length; i++) {
-            numbers[i] += parseInt(binary.charAt(i));
+// input is an array of binary strings
+const getCommonBit = (binaryStrings, highest = true) => {
+    binaryStrings = binaryStrings.slice();
+    let bin1;
+    let bin2;
+    if (highest) {
+        bin1 = 0;
+        bin2 = 1;
+    } else {
+        bin1 = 1;
+        bin2 = 0;
+    }
+    let counter = 0;
+    while (binaryStrings.length > 1) {
+        let amountOfOnes = 0;
+        for (let binary of binaryStrings) {
+            amountOfOnes += parseInt(binary.charAt(counter));
         }
+        let bin = (amountOfOnes < binaryStrings.length / 2) ? bin1 : bin2;
+        for (let i = binaryStrings.length - 1; i >= 0; i--) {
+            if (parseInt(binaryStrings[i].charAt(counter)) !== bin) {
+                binaryStrings.splice(i, 1);
+            }
+        }
+        counter++;
     }
-    let binaryResult = "";
-    for (let number of numbers) {
-        binaryResult += (number < (binaryStrings.length / 2)) ? "0" : "1";
-    }
-    return binaryResult;
+    return binaryStrings[0];
 };
 
-/*let numbers = readFile(fs, path)
-    .map((x) => parseInt(x, 2));
-console.log(numbers);*/
-
 let lines = readFile(fs, path);
-let gammaRate = parseInt(getMostCommonBit(lines), 2);
-let highestNumber = parseInt("1".repeat(lines[0].length), 2);
-let epsilonRate = highestNumber - gammaRate;
-console.log(gammaRate * epsilonRate);
+let oxygen = parseInt(getCommonBit(lines), 2);
+let co2 = parseInt(getCommonBit(lines, false), 2);
+console.log(oxygen * co2);
