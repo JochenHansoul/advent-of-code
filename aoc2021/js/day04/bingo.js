@@ -1,13 +1,12 @@
 "use strict";
 
 const fs = require("fs");
-const path = "../../resources/day04/input.txt";
+const path = "../../resources/day04/example.txt";
 
 const readFile = (fs, path) => {
-    let instructions = fs.readFileSync(path, "utf8")
+    return fs.readFileSync(path, "utf8")
         .split("\n")
-    instructions.pop();
-    return instructions;
+        .slice(0, -1);
 };
 
 const getBingo = stringBingo => {
@@ -31,7 +30,7 @@ const getBingos = (array, vertical) => {
 const getBoolArrays = (amount, hight, width) => {
     const boolArrays = [];
     for (let i = 0; i < amount; i++) {
-        let array = [];
+        const array = [];
         for (let j = 0; j < hight; j++) {
             array.push(new Array(width).fill(false));
         }
