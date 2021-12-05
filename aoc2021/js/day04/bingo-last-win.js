@@ -27,7 +27,8 @@ const getBingos = (array, vertical) => {
     return output;
 };
 
-const getBoolArrays = (amount, hight, width) => {
+// get an array of matrixes that are filled with bools (false)
+const getBoolMatrixes = (amount, hight, width) => {
     const boolArrays = [];
     for (let i = 0; i < amount; i++) {
         const array = [];
@@ -39,10 +40,10 @@ const getBoolArrays = (amount, hight, width) => {
     return boolArrays;
 };
 
-const setBingo = (bingo, bool, nr) => {
+const setBingo = (bingo, boolBingo, nr) => {
     for (let i = 0; i < bingo.length; i++) {
         let row = bingo[i];
-        let boolRow = bool[i];
+        let boolRow = boolBingo[i];
         for (let j = 0; j < row.length; j++) {
             if (row[j] === nr) {
                 boolRow[j] = true;
@@ -51,28 +52,13 @@ const setBingo = (bingo, bool, nr) => {
     }
 };
 
-const verifyBoolColumns = boolBingo => {
+const verifyBingoLines = (boolBingo, lineFunction) => {
     let found = false;
     let counter = 0;
     while (!found && counter < boolBingo[0].length){
         found = true;
         for (let i = 0; i < boolBingo.length; i++) {
-            if (!boolBingo[i][counter]) {
-                found = false;
-            }
-        }
-        counter++;
-    }
-    return found;
-};
-
-const verifyBoolRows = boolBingo => {
-    let found = false;
-    let counter = 0;
-    while (!found && counter < boolBingo[0].length){
-        found = true;
-        for (let i = 0; i < boolBingo.length; i++) {
-            if (!boolBingo[counter][i]) {
+            if (!lineFunction(boolBingo, counter, i)) {
                 found = false;
             }
         }
@@ -82,16 +68,10 @@ const verifyBoolRows = boolBingo => {
 };
 
 const verifyBoolBingo = boolBingo => {
-    /*const functionPart = (x, y) => {
-        let found = true;
-        for (let i = 0; i < boolBingo.length; i++) {
-            if (!boolBingo[x][y]) {
-                found = false;
-            }
-        }
-        return found;
-    };*/
-    return verifyBoolColumns(boolBingo) || verifyBoolRows(boolBingo);
+    const rowFunction = (boolBingo, x, y) => boolBingo[x][y];
+    const columnFunction = (boolBingo, x, y) => boolBingo[y][x];
+    return verifyBingoLines(boolBingo, rowFunction)
+        || verifyBingoLines(boolBingo, columnFunction);
 };
 
 /*
@@ -101,7 +81,7 @@ const verifyBoolBingo = boolBingo => {
 */
 const getLastWinningBingo = (bingos, numbers) => {
     numbers = numbers.slice();
-    const boolArrays = getBoolArrays(bingos.length, bingos[0].length, bingos[0][0].length);
+    const boolArrays = getBoolMatrixes(bingos.length, bingos[0].length, bingos[0][0].length);
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < bingos.length; j++) {
             setBingo(bingos[j], boolArrays[j], numbers[0]);
@@ -139,14 +119,12 @@ const getBingoScore = (bingo, boolMatrix, winningNumber) => {
     return nr * winningNumber;
 };
 
-let lines = readFile(fs, path);
-let numbers = lines.shift().split(",")
+// start code
+const lines = readFile(fs, path);
+const numbers = lines.shift().split(",")
     .map((x) => parseInt(x, 10));
 lines.shift();
 
-let bingos = getBingos(lines, 5);
-let last = getLastWinningBingo(bingos, numbers);
-/*console.log(last[0]);
-console.log(last[1]);
-console.log(last[2]);*/
+const bingos = getBingos(lines, 5);
+const last = getLastWinningBingo(bingos, numbers);
 console.log(getBingoScore(last[0], last[1], last[2]));
