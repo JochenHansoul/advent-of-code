@@ -9,59 +9,37 @@ const readFile = (fs, path) => {
         .slice(0, -1);
 };
 
-const isHorizontalOrVertical = (coordinate1, coordinate2) => {
-    return coordinate1.x === coordinate2.x || coordinate1.y === coordinate2.y;
-};
-
 const parseCoordinate = stringCoordinate => {
     const array = stringCoordinate.split(",");
     return {x: parseInt(array[0]), y: parseInt(array[1])};
 };
 
-// unfinished
-const markDiagramLine = (diagram, coordinate1, coordinate2, a, b) => {
-    let lowest;
-    let highest;
-    if (coordinate1[a] < coordinate2[a]) {
-        highest = coordinate2[a];
-        lowest = coordinate1[a];
-    } else {
-        highest = coordinate1[a];
-        lowest = coordinate2[a];
-    }
-    for (let i = lowest; i <= highest; i++) {
-        diagram[coordinate1[b]][i]++;
-    }
+const isHorizontalOrVertical = (coordinate1, coordinate2) => {
+    return coordinate1.x === coordinate2.x || coordinate1.y === coordinate2.y;
 };
 
-const markDiagram = (diagram, coordinate1, coordinate2) => {
-    let lowest;
-    let highest;
+const markLine = (diagram, coordinate1, coordinate2) => {
     if (coordinate1.x === coordinate2.x) {
         // mark y axis
-        //markDiagramLine(diagram, coordinate1, coordinate2, "y", "x");
-        if (coordinate1.y < coordinate2.y) {
-            highest = coordinate2.y;
-            lowest = coordinate1.y;
-        } else {
-            highest = coordinate1.y;
-            lowest = coordinate2.y;
-        }
+        const highest = Math.max(coordinate1.y, coordinate2.y);
+        const lowest = Math.min(coordinate1.y, coordinate2.y);
         for (let i = lowest; i <= highest; i++) {
             diagram[coordinate1.x][i]++;
         }
     } else {
         // mark x axis
-        //markDiagramLine(diagram, coordinate1, coordinate2, "x", "y");
-        if (coordinate1.x < coordinate2.x) {
-            highest = coordinate2.x;
-            lowest = coordinate1.x;
-        } else {
-            highest = coordinate1.x;
-            lowest = coordinate2.x;
-        }
+        const highest = Math.max(coordinate1.x, coordinate2.x);
+        const lowest = Math.min(coordinate1.x, coordinate2.x);
         for (let i = lowest; i <= highest; i++) {
             diagram[i][coordinate1.y]++;
+        }
+    }
+};
+
+const markDiagram = (diagram, coordinates) => {
+    for (const thermalLine of coordinates) {
+        if (isHorizontalOrVertical(thermalLine[0], thermalLine[1])) {
+            markLine(diagram, thermalLine[0], thermalLine[1]);
         }
     }
 };
@@ -93,12 +71,5 @@ for (let i = 0; i < 999; i++) {
     diagram.push(new Array(999).fill(0));
 };
 
-// marking diagran
-for (let i = 0; i < ventCoordinates.length; i++) {
-    const thermalLine = ventCoordinates[i];
-    if (isHorizontalOrVertical(thermalLine[0], thermalLine[1])) {
-        markDiagram(diagram, thermalLine[0], thermalLine[1]);
-    }
-}
-// result
+markDiagram(diagram, ventCoordinates);
 console.log(findCrossings(diagram));
