@@ -9,6 +9,15 @@ const readFile = (fs, path) => {
         .slice(0, -1);
 };
 
+const parseCoordinate = stringCoordinate => {
+    const array = stringCoordinate.split(",");
+    return {x: parseInt(array[0]), y: parseInt(array[1])};
+};
+
 // start code
 const lines = readFile(fs, path);
-console.log(lines);
+const ventCoordinates = lines.map((x) => {
+    const arrayCoordinates = x.split(/ -> /g);
+    return [parseCoordinate(arrayCoordinates[0]), parseCoordinate(arrayCoordinates[1])];
+    });
+console.log(ventCoordinates);
