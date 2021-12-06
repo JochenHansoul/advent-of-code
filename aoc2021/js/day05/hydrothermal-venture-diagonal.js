@@ -1,8 +1,8 @@
 "use strict";
 
 const fs = require("fs");
-const path = "../../resources/day05/input.txt";
-const size = 999;
+const path = "../../resources/day05/example.txt";
+const size = 10;
 
 const readFile = (fs, path) => {
     return fs.readFileSync(path, "utf8")
@@ -15,12 +15,10 @@ const parseCoordinate = stringCoordinate => {
     return {x: parseInt(array[0]), y: parseInt(array[1])};
 };
 
-const createDiagram = size => {
-    const diagram = [];
-    for (let i = 0; i < size; i++) {
-        diagram.push(new Array(size).fill(0));
-    };
-    return diagram;
+const createMatrix = (width, height) => {
+    return Array.from({
+        length: height },
+        () => (new Array(width).fill(0)));
 };
 
 const goesDown = (coordinate1, coordinate2) => {
@@ -89,7 +87,7 @@ const ventCoordinates = lines.map((x) => {
     return [parseCoordinate(arrayCoordinates[0]), parseCoordinate(arrayCoordinates[1])];
     });
 
-const diagram = createDiagram(size);
+const diagram = createMatrix(size, size);
 markDiagram(diagram, ventCoordinates);
 console.log(findCrossings(diagram));
 // 19652 (too low)
