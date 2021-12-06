@@ -15,7 +15,7 @@ const parseCoordinate = stringCoordinate => {
     return {x: parseInt(array[0]), y: parseInt(array[1])};
 };
 
-const createMatrix = (width, height) => {
+const createMatrix = (width, height = width) => {
     return Array.from({
         length: height },
         () => (new Array(width).fill(0)));
@@ -87,7 +87,7 @@ const ventCoordinates = lines.map((x) => {
     return [parseCoordinate(arrayCoordinates[0]), parseCoordinate(arrayCoordinates[1])];
     });
 
-const diagram = createMatrix(size, size);
+const diagram = createMatrix(size);
 markDiagram(diagram, ventCoordinates);
 console.log(findCrossings(diagram));
 // 19652 (too low)
