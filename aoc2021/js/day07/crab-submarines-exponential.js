@@ -9,10 +9,16 @@ const readFile = (fs, path) => {
         .slice(0, -1);
 };
 
-const getDistance = (positions, destination) => {
+// increases in steps of 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78
+const getIncreasingDistance = (positions, destination) => {
     let distance = 0;
-    for (let position of positions) {
-        distance += Math.abs(position - destination);
+    for (const position of positions) {
+        const result = Math.abs(position - destination);
+        let sum = 0;
+        for (let i = 1; i <= result; i++) {
+            sum += i;
+        }
+        distance += sum;
     }
     return distance;
 };
@@ -21,15 +27,12 @@ const getDistance = (positions, destination) => {
 // start code
 const submarines = readFile(fs, path)[0].split(/,/g)
     .map((x) => parseInt(x, 10));
-//const sum = submarines.reduce((a, b) => a + b);
-//const average = Math.round(sum / submarines.length);
+
 let counter = 0;
-let previousNumber = getDistance(submarines, counter) + 1;
-let number = getDistance(submarines, counter);
+let previousNumber = getIncreasingDistance(submarines, counter) + 1;
+let number = getIncreasingDistance(submarines, counter);
 while (number < previousNumber) {
     previousNumber = number;
-    number = getDistance(submarines, ++counter);
+    number = getIncreasingDistance(submarines, ++counter);
 }
 console.log(previousNumber);
-
-// 353240 (too high)
