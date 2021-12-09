@@ -11,16 +11,6 @@ const readFile = (fs, path) => {
         .slice(0, -1);
 };
 
-/*
-++alles eerst alfabetisch sorteren
-++de vier unieke nummers identificeren
-++eerst de 9 identificeren (bevat 4 met exact het verschil tussen 1 en 7)
-++daarna onderscheid maken tussen 0 en 6 doordat 0 ook dezelfde segmenten heeft als 1"
-++3 identificeren omdat deze dezelfde twee segmenten bevat als 1
-++5 identificeren omdat deze dezelfde twee segmenten bevat die uniek zijn aan 4 (de twee van 1 verwijderen)
-++2 blijft over
-*/
-
 const removeFromArray = (array, toBeRemoved) => {
     const output = array.slice();
     for (const remove of toBeRemoved) {
@@ -33,7 +23,15 @@ const removeFromArray = (array, toBeRemoved) => {
 };
 
 
-
+/*
+++alles eerst alfabetisch sorteren
+++de vier unieke nummers identificeren
+++eerst de 9 identificeren (bevat 4 met exact het verschil tussen 1 en 7)
+++daarna onderscheid maken tussen 0 en 6 doordat 0 ook dezelfde segmenten heeft als 1"
+++3 identificeren omdat deze dezelfde twee segmenten bevat als 1
+++5 identificeren omdat deze dezelfde twee segmenten bevat die uniek zijn aan 4 (de twee van 1 verwijderen)
+++2 blijft over
+*/
 const getMap = patterns => {
     const map = new Map();
     const sortedPatterns = patterns.map((x) => x.split("").sort());
@@ -101,13 +99,12 @@ const getMap = patterns => {
     }
     sortedPatterns.splice(sortedPatterns.indexOf(tree), 1); // removing 3
     four = removeFromArray(four, one);
+    // it's unnecessary to remove the last two numbers
     for (let pattern of sortedPatterns) {
         if (pattern.includes(four[0]) && pattern.includes(four[1])) {
             map.set(pattern.join(""), 5);
-            //sortedPatterns.splice(sortedPatterns.indexOf(pattern), 1); // removing 5
         } else {
             map.set(pattern.join(""), 2);
-            //sortedPatterns.splice(sortedPatterns.indexOf(pattern), 1); // removing 2
         }
     }
     return map;
@@ -134,13 +131,19 @@ const input = readFile(fs, path)
         };
     });
 
-// 7
-//console.log(getMap(input[7].pattern));
 let sum = 0;
 for (const o of input) {
     sum += getOutputNumber(o);
 }
-console.log("sum:", sum);
+console.log(sum);
 
 // 1069670 (too low)
 // 1070957 (correct)
+
+/*
+I had some trouble with the removeFronArray function (why can't they just remove the first element of the array or somethings?)
+I accidentaly put a reference to the original array into a variable and removed the elements of the original array, then I
+forgot to change the "array".index() name and had to check if the element does not excist
+I also had a lot of trouble with removing the original numbers from the sortedArray AFTER the for loop otherwise it created
+incorrect values
+*/
