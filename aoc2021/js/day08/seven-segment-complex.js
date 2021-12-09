@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const path = "../../resources/day08/example.txt";
+const path = "../../resources/day08/input.txt";
 
 const searchedNumbers = [2, 4, 3, 7];
 
@@ -11,20 +11,118 @@ const readFile = (fs, path) => {
         .slice(0, -1);
 };
 
-
 /*
-input:
-ten unique signal patterns, a | delimiter, and finally the four digit output value
-
-each use a unique number of segments:
-1   2
-4   4
-7   3
-8   7
-
-question:
-In the output values, how many times do digits 1, 4, 7, or 8 appear?
+++alles eerst alfabetisch sorteren
+++de vier unieke nummers identificeren
+++eerst de 9 identificeren (bevat 4 met exact het verschil tussen 1 en 7)
+++daarna onderscheid maken tussen 0 en 6 doordat 0 ook dezelfde segmenten heeft als 1"
+++3 identificeren omdat deze dezelfde twee segmenten bevat als 1
+++5 identificeren omdat deze dezelfde twee segmenten bevat die uniek zijn aan 4 (de twee van 1 verwijderen)
+++2 blijft over
 */
+
+const removeFromArray = (array, toBeRemoved) => {
+    const output = array.slice();
+    for (const remove of toBeRemoved) {
+        const index = output.indexOf(remove);
+        if (index > -1) {
+            output.splice(index, 1);
+        }
+    }
+    return output;
+};
+
+
+
+const getMap = patterns => {
+    const map = new Map();
+    const sortedPatterns = patterns.map((x) => x.split("").sort());
+    let one;
+    let four;
+    let seven;
+    let eight;
+    for (let pattern of sortedPatterns) {
+        const length = pattern.length;
+        if (searchedNumbers.includes(length)) {
+            if (length === 2) {
+                map.set(pattern.join(""), 1);
+                one = pattern;
+            } else if (length === 4) {
+                map.set(pattern.join(""), 4);
+                four = pattern;
+            } else if (length === 3) {
+                map.set(pattern.join(""), 7);
+                seven = pattern;
+            } else {
+                map.set(pattern.join(""), 8);
+                eight = pattern;
+            }
+        }
+    }
+    sortedPatterns.splice(sortedPatterns.indexOf(one), 1);
+    sortedPatterns.splice(sortedPatterns.indexOf(four), 1);
+    sortedPatterns.splice(sortedPatterns.indexOf(seven), 1);
+    sortedPatterns.splice(sortedPatterns.indexOf(eight), 1);
+    seven = removeFromArray(seven, one);
+    let nine;
+    for (let pattern of sortedPatterns) {
+        if (pattern.length === 6
+                && pattern.includes(seven[0])
+                && pattern.includes(four[0])
+                && pattern.includes(four[1])
+                && pattern.includes(four[2])
+                && pattern.includes(four[3])) {
+            map.set(pattern.join(""), 9);
+            nine = pattern;
+        }
+    }
+    sortedPatterns.splice(sortedPatterns.indexOf(nine), 1);
+    let zero;
+    let six;
+    for (let pattern of sortedPatterns) {
+        if (pattern.length === 6) {
+            if (pattern.includes(one[0]) && pattern.includes(one[1])) {
+                map.set(pattern.join(""), 0);
+                zero = pattern;
+            } else {
+                map.set(pattern.join(""), 6);
+                six = pattern;
+            }
+        }
+    }
+    sortedPatterns.splice(sortedPatterns.indexOf(zero), 1); // removing 0
+    sortedPatterns.splice(sortedPatterns.indexOf(six), 1); // removing 6
+    let tree;
+    for (let pattern of sortedPatterns) {
+        if (pattern.includes(one[0]) && pattern.includes(one[1])) {
+            map.set(pattern.join(""), 3);
+            tree = pattern;
+        }
+    }
+    sortedPatterns.splice(sortedPatterns.indexOf(tree), 1); // removing 3
+    four = removeFromArray(four, one);
+    for (let pattern of sortedPatterns) {
+        if (pattern.includes(four[0]) && pattern.includes(four[1])) {
+            map.set(pattern.join(""), 5);
+            //sortedPatterns.splice(sortedPatterns.indexOf(pattern), 1); // removing 5
+        } else {
+            map.set(pattern.join(""), 2);
+            //sortedPatterns.splice(sortedPatterns.indexOf(pattern), 1); // removing 2
+        }
+    }
+    return map;
+}
+
+const getOutputNumber = o => {
+    const map = getMap(o.pattern);
+    const sortedNumbers = o.output.map((x) => x.split("").sort());
+    let sum = "";
+    for (const sortedNumber of sortedNumbers) {
+        sum += map.get(sortedNumber.join(""));
+    }
+    return parseInt(sum, 10);
+}
+
 
 // start code
 const input = readFile(fs, path)
@@ -36,28 +134,13 @@ const input = readFile(fs, path)
         };
     });
 
-console.log("digit  ", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-console.log("segment", [6, 2, 5, 5, 4, 5, 6, 3, 7, 6] );
-for (let pattern of input[0].pattern) {
-    let s = "";
-    const length = pattern.length;
-    if (searchedNumbers.includes(length)) {
-        s = (2 === length) ? 1
-            : (3 === length) ? 7
-            : (4 === length) ? 4
-            : 8;
-    }
-    console.log(pattern.length, pattern, s);
+// 7
+//console.log(getMap(input[7].pattern));
+let sum = 0;
+for (const o of input) {
+    sum += getOutputNumber(o);
 }
+console.log("sum:", sum);
 
-/*
-alles eerst alfabetisch sorteren
-eerst de 9 identificeren (bevat 4 met exact het verschil tussen 1 en 7)
-daarna onderscheid maken tussen 0 en 6 doordat 0 ook dezelfde segmenten heeft als 1"
-3 identificeren omdat deze dezelfde twee segmenten bevat als 1
-5 identificeren omdat deze dezelfde twee segmenten vevat die niek zijn aan 4 (de twee van 1 verwijderen)
-gevonden: 0, 1, 3, 4, 6, 7, 8, 9
-nog zoeken: 2, 5
-
-
-// 349 (correct, first part)
+// 1069670 (too low)
+// 1070957 (correct)
