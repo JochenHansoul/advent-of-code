@@ -11,9 +11,9 @@ const readFile = (fs, path) => {
         .slice(0, -1);
 };
 
-const removeFromArray = (array, toBeRemoved) => {
-    const output = array.slice();
-    for (const remove of toBeRemoved) {
+const removeNumbers = (numbers, removeNumbers) => {
+    const output = numbers.slice();
+    for (const remove of removeNumbers) {
         const index = output.indexOf(remove);
         if (index > -1) {
             output.splice(index, 1);
@@ -33,79 +33,67 @@ const removeFromArray = (array, toBeRemoved) => {
 ++2 blijft over
 */
 const getMap = patterns => {
-    const map = new Map();
-    const sortedPatterns = patterns.map((x) => x.split("").sort());
-    let one;
-    let four;
-    let seven;
-    let eight;
-    for (let pattern of sortedPatterns) {
+    const sortedPatterns = patterns.map((x) => x.split("").sort().join(""));
+    const numbers = [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined]; 
+    for (const pattern of sortedPatterns) {
         const length = pattern.length;
         if (searchedNumbers.includes(length)) {
             if (length === 2) {
-                map.set(pattern.join(""), 1);
-                one = pattern;
+                numbers[1] = pattern;
             } else if (length === 4) {
-                map.set(pattern.join(""), 4);
-                four = pattern;
+                numbers[4] = pattern;
             } else if (length === 3) {
-                map.set(pattern.join(""), 7);
-                seven = pattern;
+                numbers[7] = pattern;
             } else {
-                map.set(pattern.join(""), 8);
-                eight = pattern;
+                numbers[8] = pattern;
             }
         }
     }
-    sortedPatterns.splice(sortedPatterns.indexOf(one), 1);
-    sortedPatterns.splice(sortedPatterns.indexOf(four), 1);
-    sortedPatterns.splice(sortedPatterns.indexOf(seven), 1);
-    sortedPatterns.splice(sortedPatterns.indexOf(eight), 1);
-    seven = removeFromArray(seven, one);
-    let nine;
-    for (let pattern of sortedPatterns) {
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[1]), 1);
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[4]), 1);
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[7]), 1);
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[8]), 1);
+    const sevenDifference = numbers[7].replace(numbers[1].charAt(0), "").replace(numbers[1].charAt(1), "");// removeNumbers(seven.split(""), one.split(""));
+    for (const pattern of sortedPatterns) {
         if (pattern.length === 6
-                && pattern.includes(seven[0])
-                && pattern.includes(four[0])
-                && pattern.includes(four[1])
-                && pattern.includes(four[2])
-                && pattern.includes(four[3])) {
-            map.set(pattern.join(""), 9);
-            nine = pattern;
+                && pattern.includes(sevenDifference[0])
+                && pattern.includes(numbers[4][0])
+                && pattern.includes(numbers[4][1])
+                && pattern.includes(numbers[4][2])
+                && pattern.includes(numbers[4][3])) {
+            numbers[9] = pattern;
         }
     }
-    sortedPatterns.splice(sortedPatterns.indexOf(nine), 1);
-    let zero;
-    let six;
-    for (let pattern of sortedPatterns) {
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[9]), 1);
+    for (const pattern of sortedPatterns) {
         if (pattern.length === 6) {
-            if (pattern.includes(one[0]) && pattern.includes(one[1])) {
-                map.set(pattern.join(""), 0);
-                zero = pattern;
+            if (pattern.includes(numbers[1][0]) && pattern.includes(numbers[1][1])) {
+                numbers[0] = pattern;
             } else {
-                map.set(pattern.join(""), 6);
-                six = pattern;
+                numbers[6] = pattern;
             }
         }
     }
-    sortedPatterns.splice(sortedPatterns.indexOf(zero), 1); // removing 0
-    sortedPatterns.splice(sortedPatterns.indexOf(six), 1); // removing 6
-    let tree;
-    for (let pattern of sortedPatterns) {
-        if (pattern.includes(one[0]) && pattern.includes(one[1])) {
-            map.set(pattern.join(""), 3);
-            tree = pattern;
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[0]), 1); // removing 0
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[6]), 1); // removing 6
+    for (const pattern of sortedPatterns) {
+        if (pattern.includes(numbers[1][0]) && pattern.includes(numbers[1][1])) {
+            numbers[3] = pattern;
         }
     }
-    sortedPatterns.splice(sortedPatterns.indexOf(tree), 1); // removing 3
-    four = removeFromArray(four, one);
-    // it's unnecessary to remove the last two numbers
-    for (let pattern of sortedPatterns) {
-        if (pattern.includes(four[0]) && pattern.includes(four[1])) {
-            map.set(pattern.join(""), 5);
-        } else {
-            map.set(pattern.join(""), 2);
-        }
+    sortedPatterns.splice(sortedPatterns.indexOf(numbers[3]), 1); // removing 3
+    const fourDifference = numbers[4].replace(numbers[1][0], "").replace(numbers[1][1], "");// removeNumbers(four.split(""), one.split(""));
+    const lastPattern = sortedPatterns.pop();
+    if (lastPattern.includes(fourDifference[0]) && lastPattern.includes(fourDifference[1])) {
+        numbers[5] = lastPattern;
+        numbers[2] = sortedPatterns.pop();
+    } else {
+        numbers[2] = lastPattern;
+        numbers[5] = sortedPatterns.pop();
+    }
+    const map = new Map();
+    for (let i = 0; i < numbers.length; i++) {
+        map.set(numbers[i], i);
     }
     return map;
 }
