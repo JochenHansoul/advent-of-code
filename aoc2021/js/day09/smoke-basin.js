@@ -10,9 +10,10 @@ const readFile = (fs, path) => {
 };
 
 const createMatrix = (width, height = width) => {
-    return Array.from({
-        length: height },
-        () => (new Array(width).fill(0)));
+    return Array.from(
+        { length: height },
+        () => new Array(width).fill(0)
+    );
 };
 
 const getRiskLevel = points => {
