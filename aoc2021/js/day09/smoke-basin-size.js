@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const path = "../../resources/day09/example.txt";
+const path = "../../resources/day09/input.txt";
 
 const readFile = (fs, path) => {
     return fs.readFileSync(path, "utf8")
@@ -15,12 +15,11 @@ const getLowPoints = points => {
     for (let i = 0; i < points.length; i++) {
         for (let j = 0; j < points[0].length; j++) {
             const value = points[i][j].v;
-            // clockwise starting from upper position
             if ((i === 0 || value < points[i - 1][j].v)
                 && (j === (points[i].length - 1) || value < points[i][j + 1].v)
                 && (i === (points.length - 1) || value < points[i + 1][j].v)
                 && (j === 0 || value < points[i][j - 1].v)) {
-                    lowPoints.push([i, j]);
+                lowPoints.push([i, j]);
             }
         }
     }
@@ -33,9 +32,9 @@ const getLowPoints = points => {
 * return    array of all the lowpoints (objects) that are one value higher at the direct
 *           cardinal directions of the lowpoint
 */
-const getCardinalPointCoordinates = (points, lowPoint) => {
-    const i = lowPoint[0];
-    const j = lowPoint[1];
+const getCardinalPointCoordinates = (points, coordinate) => {
+    const i = coordinate[0];
+    const j = coordinate[1];
     const value = points[i][j].v + 1;
     const cardinalPointCoordinates = [];
     if (value < 9) {
@@ -52,7 +51,6 @@ const getCardinalPointCoordinates = (points, lowPoint) => {
             cardinalPointCoordinates.push([i, j - 1]);
         }
     }
-    //console.log(cardinalPointCoordinates);
     return cardinalPointCoordinates;
 };
 
@@ -63,9 +61,8 @@ const getCardinalPointCoordinates = (points, lowPoint) => {
 */
 const getBasinSize = (points, lowPoint) => {
     const set = new Set(); // these are objects
-    set.add(points[lowPoint[0], lowPoint[1]]);
+    set.add(points[lowPoint[0]][lowPoint[1]]);
     let lowPointCoordinates = [lowPoint]; // these are coordinates [0, 1], not objects
-    //console.log(lowPointCoordinates);
     while (lowPointCoordinates.length > 0) {
         const nextLowPointCoordinates = [];
         for (const lowPointCoordinate of lowPointCoordinates) {
@@ -73,15 +70,22 @@ const getBasinSize = (points, lowPoint) => {
             for (const coordinate of getCardinalPointCoordinates(points, lowPointCoordinate)) {
                 nextLowPointCoordinates.push(coordinate);
                 set.add(points[coordinate[0]][coordinate[1]]);
-                //console.log(points[coordinate[0]][coordinate[1]]);
             }
         }
-        //console.log(set.size);
         lowPointCoordinates = nextLowPointCoordinates;
     }
+    //console.log(set);
     return set.size;
 };
 
+const getBasinSizes = points => {
+    const sizes = [];
+    const lowPoints = getLowPoints(points);
+    for (let i = 0; i < lowPoints.length; i++) {
+        sizes.push(getBasinSize(points, lowPoints[i]));
+    }
+    return sizes;
+};
 
 
 // start code
@@ -90,8 +94,10 @@ const input = readFile(fs, path).map((x) => {
         return {v: parseInt(y)}
     })
 });
-let sizes = [];
-for (let i = 0; i < getLowPoints(input).length; i++) {
-    sizes.push(getBasinSize(input, getLowPoints(input)[i]));
-}
-console.log("size:", sizes);
+
+const basinSizes = getBasinSizes(input)
+    .sort((a, b) => b - a);
+console.log(basinSizes[0] * basinSizes[1] * basinSizes[2]);
+
+// 599256 (too low)
+// 599257 (a guess, too low)
