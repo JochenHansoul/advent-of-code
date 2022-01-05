@@ -11,10 +11,10 @@ const readFile = (fs, path) => {
 
 const getBingo = stringBingo => {
     return stringBingo.map((x) => {
-            return x.trim().replace(/  /g, " ")
-                .split(" ")
-                .map((y) => parseInt(y, 10));
-        });
+        return x.trim().replace(/  /g, " ")
+            .split(" ")
+            .map((y) => parseInt(y, 10));
+    });
 };
 
 const getBingos = (array, vertical) => {

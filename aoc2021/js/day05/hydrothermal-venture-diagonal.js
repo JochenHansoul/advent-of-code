@@ -12,13 +12,17 @@ const readFile = (fs, path) => {
 
 const parseCoordinate = stringCoordinate => {
     const array = stringCoordinate.split(",");
-    return {x: parseInt(array[0]), y: parseInt(array[1])};
+    return {
+        x: parseInt(array[0]),
+        y: parseInt(array[1])
+    };
 };
 
 const createMatrix = (width, height = width) => {
-    return Array.from({
-        length: height },
-        () => (new Array(width).fill(0)));
+    return Array.from(
+        { length: height },
+        () => (new Array(width).fill(0))
+    );
 };
 
 const goesDown = (coordinate1, coordinate2) => {
@@ -85,7 +89,7 @@ const lines = readFile(fs, path);
 const ventCoordinates = lines.map((x) => {
     const arrayCoordinates = x.split(/ -> /g);
     return [parseCoordinate(arrayCoordinates[0]), parseCoordinate(arrayCoordinates[1])];
-    });
+});
 
 const diagram = createMatrix(size);
 markDiagram(diagram, ventCoordinates);
