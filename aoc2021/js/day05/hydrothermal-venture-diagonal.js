@@ -18,10 +18,10 @@ const parseCoordinate = stringCoordinate => {
     };
 };
 
-const createMatrix = (width, height = width) => {
+const createMatrix = (width, height = width, defaultValue = 0) => {
     return Array.from(
         { length: height },
-        () => (new Array(width).fill(0))
+        () => (new Array(width).fill(defaultValue))
     );
 };
 
