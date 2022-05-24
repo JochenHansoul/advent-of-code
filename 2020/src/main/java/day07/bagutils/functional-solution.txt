@@ -1,0 +1,14 @@
+2022-05-24
+Possible functional solution.
+You furst create a bag class that can only receive a color, pattern and
+bag content that is a map with the bags and their amount.
+First when loading the text file we create a filterer array consisting of
+string with at first the original color and pattern of the bag and then
+the childbags and their amounts (amount in strings).
+We order this array on lengt from the most few bag to the most bags
+(possibly working with TreeSet?)
+We then take the bags that contain no bags and ad them to a newly created
+bagRules set. We then iterate trough the array or TreeSet and search for
+the bags that only contain bags that are in the set and create new bags
+out of those bags with a set of the bags that are withim then and continue
+untill the set contains as much bags as the length of the array or TreeSet.
