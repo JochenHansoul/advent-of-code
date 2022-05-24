@@ -1,5 +1,15 @@
 "use strict";
 
+/*
+possible solutions
+
+2022-05-24:
+create a grid (2D array) if objects with depths (and possibly coorinates).
+For each trench you create a set and put the corresponding opbjects into iet.
+Because it is a set only unique objects are added and we try to solve it
+from there.
+*/
+
 const fs = require("fs");
 const path = "../../resources/day09/input.txt";
 
